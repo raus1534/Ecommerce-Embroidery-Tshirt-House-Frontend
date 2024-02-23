@@ -2,6 +2,7 @@ import styled from "styled-components";
 import { mobile } from "../responsive";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { registerUser } from "../api/auth";
 
 const Container = styled.div`
   width: 100vw;
@@ -66,8 +67,8 @@ const Register = () => {
 
   const handleRegister = async (e) => {
     e.preventDefault();
-    // const data = await register(registerInfo);
-    // if (data) navigate("/login", { replace: true });
+    const { newUser } = await registerUser(registerInfo);
+    if (newUser) navigate("/login", { replace: true });
   };
   const handleChange = ({ target }) => {
     const { name, value } = target;

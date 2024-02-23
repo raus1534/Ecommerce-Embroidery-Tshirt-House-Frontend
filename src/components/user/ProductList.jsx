@@ -3,8 +3,6 @@ import styled from "styled-components";
 import { mobile } from "../../responsive";
 import { useLocation } from "react-router-dom";
 import { useState } from "react";
-import Navbar from "./Navbar";
-import Announcement from "./Announcement";
 import Newsletter from "./Home/Newsletter";
 import Products from "./Products";
 import Footer from "./Footer";
@@ -52,8 +50,6 @@ const ProductList = () => {
   console.log(filters);
   return (
     <Container>
-      <Navbar />
-      <Announcement />
       <Title>{cat}</Title>
       <FilterContainer>
         <Filter>

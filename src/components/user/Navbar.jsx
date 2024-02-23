@@ -5,6 +5,7 @@ import { Badge } from "@mui/material";
 import { ShoppingCartOutlined } from "@mui/icons-material";
 import { mobile } from "../../responsive";
 import { Link } from "react-router-dom";
+import { useAuth } from "../../hooks";
 
 const Container = styled.div`
   height: 60px;
@@ -77,6 +78,12 @@ const StyledLink = styled(Link)`
   ${mobile({ fontSize: "12px" })}/* Add additional link styles here */
 `;
 const Navbar = () => {
+  const { authInfo, handleLogout, cart } = useAuth();
+  const profile = authInfo?.profile;
+
+  const handleOnLogout = () => {
+    handleLogout();
+  };
   return (
     <Container>
       <Wrapper>
@@ -95,7 +102,7 @@ const Navbar = () => {
           </Logo>
         </Center>
         <Right>
-          {true ? (
+          {!profile ? (
             <>
               <Link to="/register">
                 <MenuItem>REGISTER</MenuItem>
@@ -106,12 +113,12 @@ const Navbar = () => {
             </>
           ) : null}
 
-          {true ? (
+          {profile ? (
             <>
-              <MenuItem>LOGOUT</MenuItem>
+              <MenuItem onClick={handleOnLogout}>LOGOUT</MenuItem>
               <Link to="/cart">
                 <MenuItem>
-                  <Badge badgeContent={1} color="primary">
+                  <Badge badgeContent={cart.length} color="primary">
                     <ShoppingCartOutlined />
                   </Badge>
                 </MenuItem>

@@ -3,10 +3,10 @@ import { Add, Remove } from "@mui/icons-material";
 import { mobile } from "../../responsive";
 import { useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
-import Navbar from "./Navbar";
-import Announcement from "./Announcement";
 import Footer from "./Footer";
 import axios from "axios";
+import { useAuth } from "../../hooks";
+import { addToCart } from "../../api/cart";
 
 const Container = styled.div``;
 const Wrapper = styled.div`
@@ -112,6 +112,25 @@ const ProductIndividual = () => {
   const [quantity, setQuantity] = useState(1);
   const [size, setSize] = useState("");
 
+  const { authInfo, cart, setCart } = useAuth();
+  const userId = authInfo?.profile?._id;
+
+  const handleAddToCart = () => {
+    const price = product.price * quantity;
+    setCart([...cart, { productId: product._id, quantity }]);
+    addToCart(
+      userId,
+      JSON.stringify({ productId: product._id, quantity }),
+      price
+    );
+  };
+  const handleQuantity = (type) => {
+    if (type === "dec") {
+      quantity > 1 && setQuantity(quantity - 1);
+    } else {
+      setQuantity(quantity + 1);
+    }
+  };
   useEffect(() => {
     const getProduct = async () => {
       try {
@@ -124,25 +143,12 @@ const ProductIndividual = () => {
     };
     getProduct();
   }, [id]);
-  const handleQuantity = (type) => {
-    if (type === "dec") {
-      quantity > 1 && setQuantity(quantity - 1);
-    } else {
-      setQuantity(quantity + 1);
-    }
-  };
 
-  const handleClick = () => {
-    console.log(product);
-    // dispatch(addProduct({ ...product, quantity, color, size }));
-  };
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
   return (
     <Container>
-      <Navbar />
-      <Announcement />
       <Wrapper>
         <ImgContainer>
           <Image src={product.img} />
@@ -179,7 +185,11 @@ const ProductIndividual = () => {
               <Amount>{quantity}</Amount>
               <Add onClick={() => handleQuantity("inc")} />
             </AmountContainer>
-            <Button onClick={handleClick}>ADD TO CART</Button>
+            {!authInfo?.profile ? (
+              <Button>LOGIN TO ADD TO CART</Button>
+            ) : (
+              <Button onClick={handleAddToCart}>ADD TO CART</Button>
+            )}
           </AddContainer>
         </InfoContainer>
       </Wrapper>

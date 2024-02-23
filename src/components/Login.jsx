@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import { mobile } from "../responsive";
 import { useState } from "react";
+import { useAuth } from "../hooks";
 
 const Container = styled.div`
   width: 100vw;
@@ -65,11 +66,11 @@ const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleClick = async (e) => {
+  const { handleLogin } = useAuth();
+
+  const handleClick = (e) => {
     e.preventDefault();
-    // const { accessToken, others } = await login({ username, password });
-    // localStorage.setItem("auth-token", accessToken);
-    // localStorage.setItem("root", JSON.stringify(others));
+    handleLogin(username, password);
   };
 
   return (
