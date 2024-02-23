@@ -2,7 +2,7 @@ import client from "./client";
 
 export const addToCart = async (userId, productDetail, price) => {
   const auth_token = localStorage.getItem("auth-token");
-  console.log(auth_token);
+
   try {
     const { data } = await client.post(
       "/cart/add-to-cart",

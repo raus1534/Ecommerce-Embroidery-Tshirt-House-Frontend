@@ -2,6 +2,8 @@ import styled from "styled-components";
 import { mobile } from "../../responsive";
 import { useAuth } from "../../hooks";
 import Footer from "./Footer";
+import { placeOrder } from "../../api/order";
+import { useNavigate } from "react-router-dom";
 
 const Container = styled.div``;
 const Wrapper = styled.div`
@@ -131,81 +133,92 @@ const Button = styled.button`
 `;
 
 const Cart = () => {
-  const { cart, cartTotal } = useAuth();
+  const { authInfo, cart, cartTotal } = useAuth();
 
-  const handleOnCheckOut = () => {};
+  const navigate = useNavigate();
+
+  const handleOnCheckOut = async () => {
+    const { message } = await placeOrder(authInfo?.profile?._id);
+    if (message) navigate("/");
+  };
 
   return (
-    <Container>
-      <Wrapper>
-        <Title>Your Tshirt</Title>
-        <Top>
-          <TopButton>CONTINUE SHOPPING</TopButton>
-          <TopTexts>
-            <TopText>Shopping Bag({cart?.length})</TopText>
-          </TopTexts>
-        </Top>
-        <Bottom>
-          <Info>
-            {cart.map(({ productDetail, quantity }, index) => (
-              <Product key={index}>
-                <ProductDetail>
-                  <Image src={productDetail.img} />
-                  <Details>
-                    <ProductName>
-                      <b>Product:</b> {productDetail.title}
-                    </ProductName>
-                    <ProductId>
-                      <b>ID:</b> {productDetail._id}
-                    </ProductId>
-                    <ProductColor color={productDetail.color} />
-                    <ProductSize>
-                      <b>Size:</b> {productDetail.size}
-                    </ProductSize>
-                  </Details>
-                </ProductDetail>
-                <PriceDetail>
-                  <ProductAmountContainer>
-                    {/* <div onClick={() => handleOnAddClick(product, index)}>
+    <>
+      <Container>
+        <Wrapper>
+          <Title>Your Tshirt</Title>
+          <Top>
+            <TopButton>CONTINUE SHOPPING</TopButton>
+            <TopTexts>
+              <TopText>Shopping Bag({cart?.length})</TopText>
+            </TopTexts>
+          </Top>
+          <Bottom>
+            <Info>
+              {cart.map(({ productDetail, quantity }, index) => (
+                <Product key={index}>
+                  <ProductDetail>
+                    <Image src={productDetail.img} />
+                    <Details>
+                      <ProductName>
+                        <b>Product:</b> {productDetail.title}
+                      </ProductName>
+                      <ProductId>
+                        <b>ID:</b> {productDetail._id}
+                      </ProductId>
+                      <ProductColor color={productDetail.color} />
+                      <ProductSize>
+                        <b>Size:</b> {productDetail.size}
+                      </ProductSize>
+                    </Details>
+                  </ProductDetail>
+                  <PriceDetail>
+                    <ProductAmountContainer>
+                      {/* <div onClick={() => handleOnAddClick(product, index)}>
                       <Add />
                     </div> */}
 
-                    <ProductAmount>{quantity}</ProductAmount>
-                    {/* <Remove /> */}
-                  </ProductAmountContainer>
-                  <ProductPrice>
-                    Rs {productDetail.price * quantity}
-                  </ProductPrice>
-                </PriceDetail>
-              </Product>
-            ))}
-            <Hr />
-          </Info>
-          <Summary>
-            <SummaryTitle>ORDER SUMMARY</SummaryTitle>
-            <SummaryItem>
-              <SummaryItemText>Subtotal</SummaryItemText>
-              <SummaryItemPrice>Rs {cartTotal}</SummaryItemPrice>
-            </SummaryItem>
-            <SummaryItem>
-              <SummaryItemText>Estimated Shipping</SummaryItemText>
-              <SummaryItemPrice>Rs 590</SummaryItemPrice>
-            </SummaryItem>
-            {/* <SummaryItem>
-              <SummaryItemText>Shipping Discount</SummaryItemText>
-              <SummaryItemPrice>Rs -590</SummaryItemPrice>
-            </SummaryItem> */}
-            <SummaryItem type="total">
-              <SummaryItemText>Total</SummaryItemText>
-              <SummaryItemPrice>Rs {cartTotal + 590}</SummaryItemPrice>
-            </SummaryItem>
+                      <ProductAmount>{quantity}</ProductAmount>
+                      {/* <Remove /> */}
+                    </ProductAmountContainer>
+                    <ProductPrice>
+                      Rs {productDetail.price * quantity}
+                    </ProductPrice>
+                  </PriceDetail>
+                </Product>
+              ))}
+              <Hr />
+            </Info>
+            <Summary>
+              <SummaryTitle>ORDER SUMMARY</SummaryTitle>
+              <SummaryItem>
+                <SummaryItemText>Subtotal</SummaryItemText>
+                <SummaryItemPrice>Rs {cartTotal}</SummaryItemPrice>
+              </SummaryItem>
+              <SummaryItem>
+                <SummaryItemText>Estimated Shipping</SummaryItemText>
+                <SummaryItemPrice>Rs {cartTotal ? 590 : 0}</SummaryItemPrice>
+              </SummaryItem>
+              <SummaryItem type="total">
+                <SummaryItemText>Total</SummaryItemText>
+                <SummaryItemPrice>
+                  Rs {cartTotal ? cartTotal + 590 : 0}
+                </SummaryItemPrice>
+              </SummaryItem>
 
-            <Button onClick={handleOnCheckOut}>CHECKOUT NOW</Button>
-          </Summary>
-        </Bottom>
-      </Wrapper>
-      <Footer />
-    </Container>
+              <Button onClick={handleOnCheckOut}>CHECKOUT NOW</Button>
+            </Summary>
+          </Bottom>
+        </Wrapper>
+        <Footer />
+      </Container>
+      {/* <div className="fixed inset-0 flex items-center justify-center w-screen h-screen">
+        <div className="flex">
+          <input type="text" />
+          <Button>Place Order</Button>
+        </div>
+      </div> */}
+    </>
   );
 };
 
