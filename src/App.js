@@ -8,8 +8,14 @@ import Register from "./components/Register";
 import Cart from "./components/user/Cart";
 import Announcement from "./components/user/Announcement";
 import Navbar from "./components/user/Navbar";
+import { useAuth } from "./hooks";
+import AdminNavigator from "./navigator/AdminNavigator";
 
 export default function App() {
+  const { authInfo } = useAuth();
+  const isAdmin = authInfo?.profile?.isAdmin;
+
+  if (isAdmin) return <AdminNavigator />;
   return (
     <>
       <Announcement />

@@ -22,9 +22,7 @@ export const addToCart = async (userId, productDetail, price) => {
   }
 };
 export const getCartProduct = async (userId) => {
-  console.log(userId);
   const auth_token = localStorage.getItem("auth-token");
-  console.log(auth_token);
   try {
     const { data } = await client.post(
       "/cart/get-cart-items",

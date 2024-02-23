@@ -66,7 +66,6 @@ export default function AuthProvider({ children }) {
 
   useEffect(() => {
     isAuth();
-    console.log(authInfo);
     //eslint-disable-next-line
   }, []);
 
