@@ -4,8 +4,7 @@ import { useState } from "react";
 import { useAuth } from "../hooks";
 
 const Container = styled.div`
-  width: 100vw;
-  height: 100vh;
+  height: 87vh;
   background: linear-gradient(
       rgba(255, 255, 255, 0.5),
       rgba(255, 255, 255, 0.5)
@@ -59,44 +58,45 @@ const Link = styled.a`
   cursor: pointer;
 `;
 
-const Error = styled.span`
-  color: red;
-`;
-const Login = () => {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+export default function Login() {
+  const [loginInfo, setLoginInfo] = useState({ username: "", password: "" });
 
   const { handleLogin } = useAuth();
 
+  const { username, password } = loginInfo;
   const handleClick = (e) => {
     e.preventDefault();
     handleLogin(username, password);
   };
 
+  const handleChange = ({ target }) => {
+    const { name, value } = target;
+    setLoginInfo({ ...loginInfo, [name]: value });
+  };
+
   return (
     <Container>
       <Wrapper>
-        <Title>SIGN IN</Title>
+        <Title className="text-center">SIGN IN</Title>
         <Form>
           <Input
+            name="username"
             placeholder="username"
-            onChange={(e) => setUsername(e.target.value)}
+            onChange={handleChange}
             value={username}
           />
           <Input
+            name="password"
             placeholder="password"
             type="password"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={handleChange}
           />
           <Button onClick={handleClick}>LOGIN</Button>
-          {false && <Error>Something went wrong...</Error>}
           {/* <Link>DO NOT YOU REMEMBER THE PASSWORD?</Link> */}
           <Link to="/register">CREATE A NEW ACCOUNT</Link>
         </Form>
       </Wrapper>
     </Container>
   );
-};
-
-export default Login;
+}

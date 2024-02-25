@@ -89,10 +89,10 @@ const Navbar = () => {
       <Wrapper>
         <Left>
           <Language>EN</Language>
-          <SearchContainer>
+          {/* <SearchContainer>
             <Input placeholder="Search" />
             <FaSearch style={{ color: "gray", fontSize: 16 }} />
-          </SearchContainer>
+          </SearchContainer> */}
         </Left>
         <Center>
           <Logo>

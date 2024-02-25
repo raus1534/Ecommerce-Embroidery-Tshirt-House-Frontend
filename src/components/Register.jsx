@@ -3,10 +3,10 @@ import { mobile } from "../responsive";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { registerUser } from "../api/auth";
+import { useNotification } from "../hooks";
 
 const Container = styled.div`
-  width: 100vw;
-  height: 100vh;
+  height: 87vh;
   background: linear-gradient(
       rgba(255, 255, 255, 0.5),
       rgba(255, 255, 255, 0.5)
@@ -54,21 +54,26 @@ const Button = styled.button`
   cursor: pointer;
 `;
 
-const Register = () => {
+export default function Register() {
   const [registerInfo, setRegisterInfo] = useState({
-    name: "",
-    lastname: "",
+    firstName: "",
+    lastName: "",
     username: "",
     email: "",
     password: "",
   });
 
+  const { updateNotification } = useNotification();
   const navigate = useNavigate();
 
   const handleRegister = async (e) => {
     e.preventDefault();
-    const { newUser } = await registerUser(registerInfo);
-    if (newUser) navigate("/login", { replace: true });
+    const { user, error } = await registerUser(registerInfo);
+    if (error) return updateNotification("error", error);
+    if (user) {
+      updateNotification("success", "Account Registered Successfully");
+      navigate("/login", { user });
+    }
   };
   const handleChange = ({ target }) => {
     const { name, value } = target;
@@ -80,9 +85,9 @@ const Register = () => {
       <Wrapper>
         <Title>CREATE AN ACCOUNT</Title>
         <Form>
-          <Input name="name" placeholder="name" onChange={handleChange} />
+          <Input name="firstName" placeholder="name" onChange={handleChange} />
           <Input
-            name="lastname"
+            name="lastName"
             placeholder="lastname"
             onChange={handleChange}
           />
@@ -111,6 +116,4 @@ const Register = () => {
       </Wrapper>
     </Container>
   );
-};
-
-export default Register;
+}

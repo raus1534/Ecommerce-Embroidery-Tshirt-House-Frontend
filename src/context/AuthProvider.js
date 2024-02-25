@@ -2,6 +2,7 @@ import React, { createContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { authUser, loginUser } from "../api/auth";
 import { getCartProduct } from "../api/cart";
+import { useNotification } from "../hooks";
 
 const defaultAuthInfo = {
   profile: null,
@@ -17,6 +18,8 @@ export default function AuthProvider({ children }) {
   const [cart, setCart] = useState([]);
   const [cartTotal, setCartTotal] = useState(0);
 
+  const { updateNotification } = useNotification();
+
   const navigate = useNavigate();
 
   const isAuth = async () => {
@@ -25,7 +28,10 @@ export default function AuthProvider({ children }) {
     if (!token) return setAuthInfo({ ...authInfo, isPending: false });
     const { error, user } = await authUser();
 
-    if (error) return setAuthInfo({ ...authInfo, isPending: false, error });
+    if (error) {
+      updateNotification("error", error);
+      return setAuthInfo({ ...authInfo, isPending: false, error });
+    }
     const { existingCart, total } = await getCartProduct(user._id);
     if (existingCart) {
       setCart([...existingCart]);
@@ -45,6 +51,7 @@ export default function AuthProvider({ children }) {
 
     const { error, user } = await loginUser({ username, password });
     if (error) {
+      updateNotification("error", error);
       return setAuthInfo({ ...authInfo, isPending: false, error });
     }
     navigate("/");

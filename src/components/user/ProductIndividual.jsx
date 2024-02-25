@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { Add, Remove } from "@mui/icons-material";
 import { mobile } from "../../responsive";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Footer from "./Footer";
 import axios from "axios";
@@ -186,7 +186,9 @@ const ProductIndividual = () => {
               <Add onClick={() => handleQuantity("inc")} />
             </AmountContainer>
             {!authInfo?.profile ? (
-              <Button>LOGIN TO ADD TO CART</Button>
+              <Button>
+                <Link to="/login">LOGIN TO ADD TO CART</Link>
+              </Button>
             ) : (
               <Button onClick={handleAddToCart}>ADD TO CART</Button>
             )}
