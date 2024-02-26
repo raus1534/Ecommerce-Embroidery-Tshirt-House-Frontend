@@ -40,3 +40,22 @@ export const getCartProduct = async (userId) => {
     return { error: error.message || error };
   }
 };
+export const updateCart = async (userId, productId, newQuantity, total) => {
+  const auth_token = localStorage.getItem("auth-token");
+  try {
+    const { data } = await client.put(
+      "/cart/update-cart",
+      { userId, productId, newQuantity, total },
+      {
+        headers: {
+          authorization: auth_token,
+        },
+      }
+    );
+    return data;
+  } catch (error) {
+    const { response } = error;
+    if (response?.data) return response.data;
+    return { error: error.message || error };
+  }
+};

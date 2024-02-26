@@ -1,10 +1,12 @@
 import styled from "styled-components";
 import { mobile } from "../../responsive";
-import { useAuth } from "../../hooks";
+import { useAuth, useNotification } from "../../hooks";
 import Footer from "./Footer";
 import { placeOrder } from "../../api/order";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
+import { Add, Remove } from "@mui/icons-material";
+import { updateCart } from "../../api/cart";
 
 const Container = styled.div``;
 const Wrapper = styled.div`
@@ -90,7 +92,7 @@ const ProductAmountContainer = styled.div`
   margin-bottom: 20px;
 `;
 const ProductAmount = styled.div`
-  font-size: 24px;
+  font-size: 28px;
   margin: 5px;
   ${mobile({ margin: "5px 15px" })}
 `;
@@ -134,8 +136,10 @@ const Button = styled.button`
 `;
 
 const Cart = () => {
-  const { authInfo, cart, cartTotal } = useAuth();
+  const { authInfo, cart, setCart, cartTotal, setCartTotal } = useAuth();
   const userId = authInfo?.profile?._id;
+
+  const { updateNotification } = useNotification();
 
   const navigate = useNavigate();
   console.log(cart);
@@ -143,6 +147,34 @@ const Cart = () => {
   const handleOnCheckOut = async () => {
     const { message } = await placeOrder(authInfo?.profile?._id);
     if (message) navigate("/");
+  };
+  const handleOnChangeProduct = async (activity, index, productId) => {
+    const productPrice = cart[index]["productDetail"]["price"];
+    const previousTotal = cartTotal;
+    let newTotal = previousTotal;
+    if (activity === "increase") {
+      cart[index]["quantity"] += 1;
+      newTotal = previousTotal + productPrice;
+    } else {
+      const quantity = cart[index]["quantity"];
+      if (quantity > 1) {
+        cart[index]["quantity"] -= 1;
+        newTotal = previousTotal - productPrice;
+      }
+    }
+    setCartTotal(newTotal);
+    setCart([...cart]);
+    updateUserCart(productId, index, newTotal);
+  };
+
+  const updateUserCart = async (productId, index, total) => {
+    const { error, updated } = await updateCart(
+      userId,
+      productId,
+      cart[index]["quantity"],
+      total
+    );
+    if (!updated) return updateNotification("error", error);
   };
   useEffect(() => {
     if (!userId) navigate("/", { replace: true });
@@ -180,12 +212,25 @@ const Cart = () => {
                   </ProductDetail>
                   <PriceDetail>
                     <ProductAmountContainer>
-                      {/* <div onClick={() => handleOnAddClick(product, index)}>
-                      <Add />
-                    </div> */}
-
+                      <Remove
+                        onClick={() =>
+                          handleOnChangeProduct(
+                            "decrease",
+                            index,
+                            productDetail._id
+                          )
+                        }
+                      />
                       <ProductAmount>{quantity}</ProductAmount>
-                      {/* <Remove /> */}
+                      <Add
+                        onClick={() =>
+                          handleOnChangeProduct(
+                            "increase",
+                            index,
+                            productDetail._id
+                          )
+                        }
+                      />
                     </ProductAmountContainer>
                     <ProductPrice>
                       Rs {productDetail.price * quantity}
@@ -203,12 +248,12 @@ const Cart = () => {
               </SummaryItem>
               <SummaryItem>
                 <SummaryItemText>Estimated Shipping</SummaryItemText>
-                <SummaryItemPrice>Rs {cartTotal ? 590 : 0}</SummaryItemPrice>
+                <SummaryItemPrice>Rs {cartTotal ? 110 : 0}</SummaryItemPrice>
               </SummaryItem>
               <SummaryItem type="total">
                 <SummaryItemText>Total</SummaryItemText>
                 <SummaryItemPrice>
-                  Rs {cartTotal ? cartTotal + 590 : 0}
+                  Rs {cartTotal ? cartTotal + 110 : 0}
                 </SummaryItemPrice>
               </SummaryItem>
 
@@ -218,12 +263,6 @@ const Cart = () => {
         </Wrapper>
         <Footer />
       </Container>
-      {/* <div className="fixed inset-0 flex items-center justify-center w-screen h-screen">
-        <div className="flex">
-          <input type="text" />
-          <Button>Place Order</Button>
-        </div>
-      </div> */}
     </>
   );
 };
