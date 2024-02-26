@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { registerUser } from "../api/auth";
 import { useNotification } from "../hooks";
+import { isValidEmail, isValidName } from "../utils/helper";
 
 const Container = styled.div`
   height: 87vh;
@@ -54,6 +55,26 @@ const Button = styled.button`
   cursor: pointer;
 `;
 
+const validateRegisterInfo = (registerInfo) => {
+  const { firstName, lastName, username, email, password, rePassword } =
+    registerInfo;
+  if (!firstName.trim()) return { ok: false, error: "First Name is Missing" };
+  if (!isValidName(firstName))
+    return { ok: false, error: "Invalid First Name is Missing" };
+  if (!lastName.trim()) return { ok: false, error: "Last Name is Missing" };
+  if (!isValidName(lastName))
+    return { ok: false, error: "Invalid Last Name is Missing" };
+  if (!username.trim()) return { ok: false, error: "Username is Missing" };
+  if (!email.trim()) return { ok: false, error: "Email is Missing" };
+  if (!isValidEmail(email)) return { ok: false, error: "Invalid Email" };
+  if (!password) return { ok: false, error: "Password is Missing" };
+  if (!rePassword) return { ok: false, error: "Password is Missing" };
+  if (password !== rePassword)
+    return { ok: false, error: "Password Didn't Matched" };
+
+  return { ok: true };
+};
+
 export default function Register() {
   const [registerInfo, setRegisterInfo] = useState({
     firstName: "",
@@ -61,6 +82,7 @@ export default function Register() {
     username: "",
     email: "",
     password: "",
+    rePassword: "",
   });
 
   const { updateNotification } = useNotification();
@@ -68,7 +90,10 @@ export default function Register() {
 
   const handleRegister = async (e) => {
     e.preventDefault();
-    const { user, error } = await registerUser(registerInfo);
+    const { ok, error: err } = validateRegisterInfo(registerInfo);
+    if (!ok) return updateNotification("error", err);
+    const { rePassword, ...rest } = registerInfo;
+    const { user, error } = await registerUser({ ...rest });
     if (error) return updateNotification("error", error);
     if (user) {
       updateNotification("success", "Account Registered Successfully");

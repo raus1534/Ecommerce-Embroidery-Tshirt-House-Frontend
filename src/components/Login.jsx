@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { mobile } from "../responsive";
 import { useState } from "react";
-import { useAuth } from "../hooks";
+import { useAuth, useNotification } from "../hooks";
 
 const Container = styled.div`
   height: 87vh;
@@ -58,14 +58,24 @@ const Link = styled.a`
   cursor: pointer;
 `;
 
+const validateLoginInInfo = (loginInfo) => {
+  const { username, password } = loginInfo;
+  if (!username.trim()) return { ok: false, error: "Username is Missing" };
+  if (!password.trim()) return { ok: false, error: "Password is Missing" };
+  return { ok: true };
+};
+
 export default function Login() {
   const [loginInfo, setLoginInfo] = useState({ username: "", password: "" });
 
   const { handleLogin } = useAuth();
+  const { updateNotification } = useNotification();
 
   const { username, password } = loginInfo;
   const handleClick = (e) => {
     e.preventDefault();
+    const { error, ok } = validateLoginInInfo(loginInfo);
+    if (!ok) return updateNotification("error", error);
     handleLogin(username, password);
   };
 
