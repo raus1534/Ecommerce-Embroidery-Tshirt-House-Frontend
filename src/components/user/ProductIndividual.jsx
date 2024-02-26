@@ -1,12 +1,12 @@
 import styled from "styled-components";
 import { Add, Remove } from "@mui/icons-material";
 import { mobile } from "../../responsive";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Footer from "./Footer";
-import axios from "axios";
-import { useAuth } from "../../hooks";
+import { useAuth, useNotification } from "../../hooks";
 import { addToCart } from "../../api/cart";
+import { getProductDetail } from "../../api/product";
 
 const Container = styled.div``;
 const Wrapper = styled.div`
@@ -105,24 +105,29 @@ const Button = styled.button`
   }
 `;
 
-const ProductIndividual = () => {
-  const location = useLocation();
-  const id = location.pathname.split("/")[2];
+export default function ProductIndividual() {
+  const { productId } = useParams();
   const [product, setProduct] = useState({});
   const [quantity, setQuantity] = useState(1);
   const [size, setSize] = useState("");
 
-  const { authInfo, cart, setCart } = useAuth();
+  const { updateNotification } = useNotification();
+  const { authInfo, cart, setCart, cartTotal, setCartTotal } = useAuth();
   const userId = authInfo?.profile?._id;
 
-  const handleAddToCart = () => {
+  const handleAddToCart = async () => {
+    const isInCart = cart.some(({ productDetail }) => {
+      return product._id === productDetail._id;
+    });
+    if (isInCart) return updateNotification("warning", "Item Already In Cart");
     const price = product.price * quantity;
-    setCart([...cart, { productId: product._id, quantity }]);
-    addToCart(
+    setCart([...cart, { productDetail: product, quantity }]);
+    await addToCart(
       userId,
       JSON.stringify({ productId: product._id, quantity }),
       price
     );
+    setCartTotal(cartTotal + price);
   };
   const handleQuantity = (type) => {
     if (type === "dec") {
@@ -131,41 +136,35 @@ const ProductIndividual = () => {
       setQuantity(quantity + 1);
     }
   };
-  useEffect(() => {
-    const getProduct = async () => {
-      try {
-        const { data } = await axios.get(
-          "http://localhost:8000/api/products/find/" + id
-        );
-        setProduct(data);
-        setSize(data.size);
-      } catch {}
-    };
-    getProduct();
-  }, [id]);
+
+  const getProductDetails = async (productId) => {
+    const { product, error } = await getProductDetail(productId);
+    if (error) return updateNotification("error", error);
+    setProduct({ ...product });
+    setSize(product?.size[0]);
+  };
 
   useEffect(() => {
     window.scrollTo(0, 0);
+    getProductDetails(productId);
+    // eslint-disable-next-line
   }, []);
+
+  const { title, desc, img, price, color } = product;
   return (
     <Container>
       <Wrapper>
         <ImgContainer>
-          <Image src={product.img} />
+          <Image src={img} />
         </ImgContainer>
         <InfoContainer>
-          <Title>{product.title}</Title>
-          <Desc>
-            {/* A mandala-inspired T-shirt, adorned with intricate geometric
-            patterns and vibrant colors, creates a harmonious blend of art and
-            fashion, capturing the essence of balance and spirituality. */}
-            {product.desc}
-          </Desc>
-          <Price>Rs {product.price}</Price>
+          <Title>{title}</Title>
+          <Desc>{desc}</Desc>
+          <Price>Rs {price}</Price>
           <FilterContainer>
             <Filter>
               <FilterTitle>Color</FilterTitle>
-              {product.color?.map((c) => (
+              {color?.map((c) => (
                 <FilterColor color={c} key={c} />
               ))}
             </Filter>
@@ -173,7 +172,7 @@ const ProductIndividual = () => {
               <FilterTitle>Size</FilterTitle>
               <FilterSize onChange={(e) => setSize(e.target.value)}>
                 {product.size?.map((s) => (
-                  <FilterSizeOption key={s}>{size}</FilterSizeOption>
+                  <FilterSizeOption key={s}>{s}</FilterSizeOption>
                 ))}
               </FilterSize>
             </Filter>
@@ -198,6 +197,4 @@ const ProductIndividual = () => {
       <Footer />
     </Container>
   );
-};
-
-export default ProductIndividual;
+}

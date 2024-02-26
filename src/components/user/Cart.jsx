@@ -4,6 +4,7 @@ import { useAuth } from "../../hooks";
 import Footer from "./Footer";
 import { placeOrder } from "../../api/order";
 import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 const Container = styled.div``;
 const Wrapper = styled.div`
@@ -134,13 +135,18 @@ const Button = styled.button`
 
 const Cart = () => {
   const { authInfo, cart, cartTotal } = useAuth();
+  const userId = authInfo?.profile?._id;
 
   const navigate = useNavigate();
+  console.log(cart);
 
   const handleOnCheckOut = async () => {
     const { message } = await placeOrder(authInfo?.profile?._id);
     if (message) navigate("/");
   };
+  useEffect(() => {
+    if (!userId) navigate("/", { replace: true });
+  }, []);
 
   return (
     <>
