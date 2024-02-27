@@ -4,7 +4,7 @@ import { FaSearch } from "react-icons/fa";
 import { Badge } from "@mui/material";
 import { ShoppingCartOutlined } from "@mui/icons-material";
 import { mobile } from "../../responsive";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../hooks";
 
 const Container = styled.div`
@@ -77,10 +77,16 @@ const StyledLink = styled(Link)`
   color: inherit;
   ${mobile({ fontSize: "12px" })}/* Add additional link styles here */
 `;
-const Navbar = () => {
+
+export default function Navbar() {
   const { authInfo, handleLogout, cart } = useAuth();
   const profile = authInfo?.profile;
 
+  const navigate = useNavigate();
+
+  const navigateToCart = () => {
+    navigate("/cart");
+  };
   const handleOnLogout = () => {
     handleLogout();
   };
@@ -116,19 +122,16 @@ const Navbar = () => {
           {profile ? (
             <>
               <MenuItem onClick={handleOnLogout}>LOGOUT</MenuItem>
-              <Link to="/cart">
-                <MenuItem>
-                  <Badge badgeContent={cart.length} color="primary">
-                    <ShoppingCartOutlined />
-                  </Badge>
-                </MenuItem>
-              </Link>
+
+              <MenuItem onClick={navigateToCart}>
+                <Badge badgeContent={cart.length} color="primary">
+                  <ShoppingCartOutlined />
+                </Badge>
+              </MenuItem>
             </>
           ) : null}
         </Right>
       </Wrapper>
     </Container>
   );
-};
-
-export default Navbar;
+}

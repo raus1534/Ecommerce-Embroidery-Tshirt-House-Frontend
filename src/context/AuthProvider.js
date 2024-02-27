@@ -63,11 +63,14 @@ export default function AuthProvider({ children }) {
     });
 
     localStorage.setItem("auth-token", user.accessToken);
+    isAuth();
   };
 
   const handleLogout = () => {
     localStorage.removeItem("auth-token");
     setAuthInfo({ ...defaultAuthInfo });
+    setCart([]);
+    setCartTotal(0);
     navigate("/", { replace: true });
   };
 

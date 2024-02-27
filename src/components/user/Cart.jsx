@@ -5,8 +5,8 @@ import Footer from "./Footer";
 import { placeOrder } from "../../api/order";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
-import { Add, Remove } from "@mui/icons-material";
-import { updateCart } from "../../api/cart";
+import { Add, Delete, Remove } from "@mui/icons-material";
+import { removeFromCart, updateCart } from "../../api/cart";
 
 const Container = styled.div``;
 const Wrapper = styled.div`
@@ -176,6 +176,23 @@ const Cart = () => {
     );
     if (!updated) return updateNotification("error", error);
   };
+
+  const removeProductFromCart = async (productId, totalPrice, index) => {
+    console.log(productId, totalPrice, index);
+    console.log(cart);
+    const newTotal = cartTotal - totalPrice;
+
+    const { updated, error } = await removeFromCart(
+      userId,
+      productId,
+      newTotal
+    );
+    if (!updated) return updateNotification("error", error);
+    cart.splice(index, 1);
+    setCartTotal(newTotal);
+    setCart([...cart]);
+  };
+
   useEffect(() => {
     if (!userId) navigate("/", { replace: true });
   }, []);
@@ -232,6 +249,18 @@ const Cart = () => {
                         }
                       />
                     </ProductAmountContainer>
+
+                    <Delete
+                      className="text-red-500"
+                      onClick={() =>
+                        removeProductFromCart(
+                          productDetail._id,
+                          productDetail.price * quantity,
+                          index
+                        )
+                      }
+                    />
+
                     <ProductPrice>
                       Rs {productDetail.price * quantity}
                     </ProductPrice>
@@ -257,7 +286,7 @@ const Cart = () => {
                 </SummaryItemPrice>
               </SummaryItem>
 
-              <Button onClick={handleOnCheckOut}>CHECKOUT NOW</Button>
+              <Button onClick={handleOnCheckOut}>PLACE ORDER</Button>
             </Summary>
           </Bottom>
         </Wrapper>
