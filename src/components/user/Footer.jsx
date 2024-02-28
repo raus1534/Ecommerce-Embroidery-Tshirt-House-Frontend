@@ -6,6 +6,7 @@ import { FaPhoneAlt } from "react-icons/fa";
 import { IoMdMail } from "react-icons/io";
 import { mobile } from "../../responsive";
 import Khalti from "../../image/Khalti.png";
+import eSewa from "../../image/eSewa.png";
 import { Link } from "react-router-dom";
 
 const Container = styled.div`
@@ -122,7 +123,10 @@ const Footer = () => {
           <IoMdMail style={{ marginRight: "10px" }} />
           embroidery330@gmail.com
         </ContactItem>
-        <Payment src={Khalti} />
+        <div className="flex">
+          <Payment src={Khalti} />
+          <Payment src={eSewa} />
+        </div>
       </Right>
     </Container>
   );

@@ -47,7 +47,6 @@ const ProductList = () => {
     });
   };
 
-  console.log(filters);
   return (
     <Container>
       <Title>{cat}</Title>

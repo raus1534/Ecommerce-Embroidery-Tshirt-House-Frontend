@@ -61,7 +61,7 @@ export const updateCart = async (userId, productId, newQuantity, total) => {
 };
 export const removeFromCart = async (userId, productId, total) => {
   const auth_token = localStorage.getItem("auth-token");
-  console.log(auth_token, userId, productId, total);
+
   try {
     const { data } = await client.put(
       "/cart/remove-from-cart",

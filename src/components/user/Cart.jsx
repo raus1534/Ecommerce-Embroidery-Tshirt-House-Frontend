@@ -4,9 +4,10 @@ import { useAuth, useNotification } from "../../hooks";
 import Footer from "./Footer";
 import { placeOrder } from "../../api/order";
 import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Add, Delete, Remove } from "@mui/icons-material";
 import { removeFromCart, updateCart } from "../../api/cart";
+import PlaceOrderModal from "../modal/PlaceOrderModal";
 
 const Container = styled.div``;
 const Wrapper = styled.div`
@@ -135,19 +136,15 @@ const Button = styled.button`
   font-weight: 600;
 `;
 
-const Cart = () => {
+export default function Cart() {
+  const [showPlaceOrderModal, setShowPlaceOrderModal] = useState(false);
   const { authInfo, cart, setCart, cartTotal, setCartTotal } = useAuth();
   const userId = authInfo?.profile?._id;
 
   const { updateNotification } = useNotification();
 
   const navigate = useNavigate();
-  console.log(cart);
 
-  const handleOnCheckOut = async () => {
-    const { message } = await placeOrder(authInfo?.profile?._id);
-    if (message) navigate("/");
-  };
   const handleOnChangeProduct = async (activity, index, productId) => {
     const productPrice = cart[index]["productDetail"]["price"];
     const previousTotal = cartTotal;
@@ -178,8 +175,6 @@ const Cart = () => {
   };
 
   const removeProductFromCart = async (productId, totalPrice, index) => {
-    console.log(productId, totalPrice, index);
-    console.log(cart);
     const newTotal = cartTotal - totalPrice;
 
     const { updated, error } = await removeFromCart(
@@ -192,6 +187,15 @@ const Cart = () => {
     setCartTotal(newTotal);
     setCart([...cart]);
   };
+
+  // const handleOnCheckOut = async () => {
+  //   const { message } = await placeOrder(authInfo?.profile?._id);
+  //   if (message) navigate("/");
+  // };
+  const handleOnPlaceOrder = () => {
+    setShowPlaceOrderModal(true);
+  };
+  const handleClosePlaceOrderModal = () => setShowPlaceOrderModal(false);
 
   useEffect(() => {
     if (!userId) navigate("/", { replace: true });
@@ -286,14 +290,17 @@ const Cart = () => {
                 </SummaryItemPrice>
               </SummaryItem>
 
-              <Button onClick={handleOnCheckOut}>PLACE ORDER</Button>
+              <Button onClick={handleOnPlaceOrder}>PLACE ORDER</Button>
             </Summary>
           </Bottom>
         </Wrapper>
         <Footer />
       </Container>
+      <PlaceOrderModal
+        userId={userId}
+        visible={showPlaceOrderModal}
+        onClose={handleClosePlaceOrderModal}
+      />
     </>
   );
-};
-
-export default Cart;
+}

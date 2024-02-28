@@ -1,12 +1,12 @@
 import client from "./client";
 
-export const placeOrder = async (userId) => {
+export const placeOrder = async (userId, shippingAddress, payment_method) => {
   const auth_token = localStorage.getItem("auth-token");
 
   try {
     const { data } = await client.post(
       "/order/place-order",
-      { userId },
+      { userId, shippingAddress, payment_method },
       {
         headers: {
           authorization: auth_token,

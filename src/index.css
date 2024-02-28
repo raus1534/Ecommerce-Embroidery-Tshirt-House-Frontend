@@ -20,6 +20,20 @@ code {
     monospace;
 }
 
+@keyframes drop {
+  0% {
+    transform: scaleY(0);
+  }
+  100% {
+    transform: scaleY(1);
+  }
+}
+
+.drop-down {
+  transform-origin: 0% 0%;
+  animation: drop 0.3s;
+}
+
 .test {
   border: 2px solid black;
 }

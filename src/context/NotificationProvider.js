@@ -8,7 +8,6 @@ export default function NotificationProvider({ children }) {
   const [notification, setNotification] = useState("");
 
   const updateNotification = (type, value) => {
-    console.log(value);
     clearTimeout(timeOutId);
     switch (type) {
       case "error":
