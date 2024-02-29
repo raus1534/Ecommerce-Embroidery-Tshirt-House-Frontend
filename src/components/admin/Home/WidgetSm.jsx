@@ -1,23 +1,19 @@
 import "../css/WidgetSm.css";
 import { MdVisibility } from "react-icons/md";
 import { useEffect, useState } from "react";
-import axios from "axios";
+import { getUserDetails } from "../../../api/admin";
 
 export default function WidgetSm() {
   const [users, setUsers] = useState([]);
 
+  const getUsers = async () => {
+    const { users } = await getUserDetails(true);
+    setUsers([...users]);
+  };
+
   useEffect(() => {
-    const getUsers = async () => {
-      try {
-        const res = await axios.get(
-          "http://localhost:8000/api/users/?new=true"
-        );
-        setUsers(res.data);
-      } catch {}
-    };
     getUsers();
   }, []);
-  console.log(users);
   return (
     <div className="widgetSm">
       <span className="widgetSmTitle">New Join Members</span>

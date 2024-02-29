@@ -1,18 +1,17 @@
 import { useEffect, useState } from "react";
 import "../css/WidgetLg.css";
-import { format } from "timeago.js";
-import axios from "axios";
+import { getOrderDetails } from "../../../api/admin";
+import ReactTimeago from "react-timeago";
 
 export default function WidgetLg() {
   const [orders, setOrders] = useState([]);
 
+  const getOrders = async () => {
+    const { orders } = await getOrderDetails(true);
+    setOrders([...orders]);
+  };
+
   useEffect(() => {
-    const getOrders = async () => {
-      try {
-        const res = await axios.get("http://localhost:8000/api/order/");
-        setOrders(res.data);
-      } catch {}
-    };
     getOrders();
   }, []);
   return (
@@ -29,7 +28,9 @@ export default function WidgetLg() {
             <td className="widgetLgUser">
               <span className="text-sm widgetLgName">{order.userId}</span>
             </td>
-            <td className="widgetLgDate">{format(order.createdAt)}</td>
+            <td className="widgetLgDate">
+              <ReactTimeago date={order.createdAt} />
+            </td>
             <td className="text-center widgetLgAmount">Rs {order.total}</td>
           </tr>
         ))}
