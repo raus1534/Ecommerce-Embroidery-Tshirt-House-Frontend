@@ -1,37 +1,46 @@
 import "./css/UserList.css";
 import { DataGrid } from "@mui/x-data-grid";
 import { MdDelete } from "react-icons/md";
-import { userRows } from "../../dummyData";
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { getUserDetails } from "../../api/admin";
+import { deleteUser } from "../../api/user";
+import { useNotification } from "../../hooks";
 
 export default function UserList() {
-  const [data, setData] = useState(userRows);
+  const [users, setUsers] = useState([]);
+  const { updateNotification } = useNotification();
 
-  const handleDelete = (id) => {
-    setData(data.filter((item) => item.id !== id));
+  const getUsers = async () => {
+    const { users } = await getUserDetails(false);
+    setUsers([...users]);
+  };
+
+  const handleDelete = async (userId) => {
+    const { message, error } = await deleteUser(userId);
+    if (error) return updateNotification("error", error);
+    updateNotification("success", message);
+    setUsers(users.filter((item) => item._id !== userId));
   };
   const columns = [
-    { field: "id", headerName: "ID", width: 90 },
-    {
-      field: "user",
-      headerName: "User",
-      width: 200,
-      renderCell: (params) => {
-        return (
-          <div className="userListUser">
-            {/* <img className="userListImg" src={params.row.avatar} alt="" /> */}
-            {params.row.username}
-          </div>
-        );
-      },
-    },
+    { field: "_id", headerName: "ID", width: 250 },
+    // {
+    //   field: "user",
+    //   headerName: "User",
+    //   width: 200,
+    //   renderCell: (params) => {
+    //     return (
+    //       <div className="userListUser">
+    //         {/* <img className="userListImg" src={params.row.avatar} alt="" /> */}
+    //         {params.row.username}
+    //       </div>
+    //     );
+    //   },
+    // },
+    { field: "name", headerName: "Name", width: 120 },
+    { field: "username", headerName: "Username", width: 120 },
     { field: "email", headerName: "Email", width: 200 },
-    {
-      field: "status",
-      headerName: "Status",
-      width: 120,
-    },
+
     {
       field: "action",
       headerName: "Action",
@@ -39,12 +48,12 @@ export default function UserList() {
       renderCell: (params) => {
         return (
           <>
-            <Link to={"/user/" + params.row.id}>
+            <Link to={"/user/" + params.row._id}>
               <button className="userListEdit">Edit</button>
             </Link>
             <MdDelete
               className="userListDelete"
-              onClick={() => handleDelete(params.row.id)}
+              onClick={() => handleDelete(params.row._id)}
             />
           </>
         );
@@ -52,19 +61,24 @@ export default function UserList() {
     },
   ];
 
+  useEffect(() => {
+    getUsers();
+  }, []);
+
   return (
     <div className="userList">
       <DataGrid
-        rows={data}
+        rows={users}
         disableRowSelectionOnClick
         columns={columns}
+        getRowId={(row) => row._id}
         initialState={{
           pagination: {
-            paginationModel: { page: 0, pageSize: 8 },
+            paginationModel: { page: 0, pageSize: 10 },
           },
         }}
-        pageSizeOptions={[5, 10]}
-        checkboxSelection
+        pageSizeOptions={[5, 10, 20]}
+        // checkboxSelection
       />
     </div>
   );
