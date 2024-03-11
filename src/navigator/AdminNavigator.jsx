@@ -19,7 +19,7 @@ export default function AdminNavigator() {
           <Route path="/users" element={<UserList />} />
           <Route path="/products" element={<ProductList />} />
           <Route path="/product/:productId" element={<Product />} />
-          <Route path="/newproduct" element={<NewProduct />} />
+          <Route path="/product/create" element={<NewProduct />} />
         </Routes>
       </div>
     </div>
