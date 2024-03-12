@@ -1,7 +1,6 @@
 import "./css/Sidebar.css";
 import { MdLineStyle, MdOutlineProductionQuantityLimits } from "react-icons/md";
 import { TbReorder } from "react-icons/tb";
-
 import { FaUser } from "react-icons/fa";
 
 import { Link } from "react-router-dom";
@@ -11,8 +10,7 @@ export default function SideBar() {
     <div className="sidebar">
       <div className="sidebarWrapper">
         <div className="sidebarMenu">
-          <h3 className="sidebarTitle">Dashboard</h3>
-          <ul className="sidebarList">
+          <ul className="flex flex-col space-y-2 sidebarList">
             <Link to="/" className="link">
               <li className="sidebarListItem active">
                 <MdLineStyle className="sidebarIcon" />

@@ -114,7 +114,7 @@ const CustomTooltip = ({ active, payload }) => {
 
     return (
       <div className="p-3 font-bold bg-white shadow-2xl rounded-xl">
-        <p>{`${MONTHS[data.month]} ${data.day}`}</p>
+        <p>{`${data.day} ${MONTHS[data.month]}`}</p>
         <p>{`Total Amount: ${data["Total Amount"]}`}</p>
         <p>{`Total Orders: ${data["Orders"]}`}</p>
       </div>
