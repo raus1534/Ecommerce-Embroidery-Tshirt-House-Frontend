@@ -24,19 +24,6 @@ export default function UserList() {
   };
   const columns = [
     { field: "_id", headerName: "ID", width: 250 },
-    // {
-    //   field: "user",
-    //   headerName: "User",
-    //   width: 200,
-    //   renderCell: (params) => {
-    //     return (
-    //       <div className="userListUser">
-    //         {/* <img className="userListImg" src={params.row.avatar} alt="" /> */}
-    //         {params.row.username}
-    //       </div>
-    //     );
-    //   },
-    // },
     { field: "name", headerName: "Name", width: 120 },
     { field: "username", headerName: "Username", width: 120 },
     { field: "email", headerName: "Email", width: 200 },

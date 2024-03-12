@@ -71,13 +71,15 @@ const FeatureItem = ({ title, detail, avatar, percentage }) => {
       <div className="flex flex-col justify-evenly">
         <div className="flex items-center">
           <span
-            className={`font-semibold ${percentage ? "text-2xl" : "text-3xl"}`}
+            className={`whitespace-nowrap font-semibold ${
+              percentage ? "text-2xl" : "text-3xl"
+            }`}
           >
             {detail}
           </span>
           {percentage && (
             <div className="flex">
-              <span className="ml-2 text-sm text-gray-600">{`${percentage} %`}</span>
+              <span className="ml-2 text-sm text-gray-600 whitespace-nowrap">{`${percentage} %`}</span>
               <span className="ml-2 text-base text-gray-600">
                 {percentage >= 0 ? (
                   <FaArrowUp size={15} className="text-green-600" />

@@ -1,5 +1,6 @@
 import "../css/WidgetSm.css";
 import { MdVisibility } from "react-icons/md";
+import { FaUserAstronaut } from "react-icons/fa";
 import { useEffect, useState } from "react";
 import { getUserDetails } from "../../../api/admin";
 
@@ -15,25 +16,23 @@ export default function WidgetSm() {
     getUsers();
   }, []);
   return (
-    <div className="widgetSm">
-      <span className="widgetSmTitle">New Join Members</span>
+    <div className="bg-white widgetSm rounded-xl">
+      <span className="widgetSmTitle">New Joined Members</span>
       <ul className="widgetSmList">
         {users.map((user) => (
-          <li className="widgetSmListItem" key={user._id}>
-            <img
-              src={
-                user.img ||
-                "https://crowd-literature.eu/wp-content/uploads/2015/01/no-avatar.gif"
-              }
-              alt=""
-              className="widgetSmImg"
-            />
-            <div className="widgetSmUser">
-              <span className="widgetSmUsername">{user.username}</span>
+          <li className="flex space-x-4 widgetSmListItem" key={user._id}>
+            <FaUserAstronaut className="widgetSmImg text-[#8293E3]" />
+            <div className="flex-1 widgetSmUser">
+              <span className="uppercase widgetSmUsername">{user?.name}</span>
+              <span className="text-sm text-gray-600 widgetSmUsername">
+                {user.createdAt.split("T")[0]}
+              </span>
             </div>
-            <button className="widgetSmButton">
-              <MdVisibility className="widgetSmIcon" />
-              Display
+            <div className="flex-1 widgetSmUser">
+              <span className="widgetSmUsername">{user?.username}</span>
+            </div>
+            <button className="widgetSmButton rounded-xl">
+              <MdVisibility className="widgetSmIcon text-[#8293E3]" />
             </button>
           </li>
         ))}

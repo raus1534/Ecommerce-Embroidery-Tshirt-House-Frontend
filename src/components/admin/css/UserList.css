@@ -1,5 +1,6 @@
 .userList {
   flex: 6;
+  margin: 20px;
 }
 .userListUser {
   display: flex;

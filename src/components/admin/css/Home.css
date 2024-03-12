@@ -1,7 +1,7 @@
-.home{
-    flex:6;
+.home {
+  flex: 6;
 }
-.homeWidget{
-    display: flex;
-    margin: 20px;
+.homeWidget {
+  display: flex;
+  margin: 20px;
 }

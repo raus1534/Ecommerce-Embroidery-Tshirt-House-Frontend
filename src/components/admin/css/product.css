@@ -54,7 +54,7 @@
 .productInfoValue {
   font-weight: 300;
 }
-.productBottom{
+.productBottom {
   padding: 20px;
   margin: 20px;
   -webkit-box-shadow: 0px 0px 11px -1px #000000;
@@ -93,17 +93,16 @@
   flex-direction: column;
   justify-content: space-around;
 }
-.productUpload{
-    display: flex;
-    align-items: center;
+.productUpload {
+  display: flex;
+  align-items: center;
 }
-.productButton{
-    border:none;
-    padding: 5px;
-    border-radius: 5px;
-    background-color: darkblue;
-    color: white;
-    font-weight: 600;
-    cursor: pointer;
+.productButton {
+  border: none;
+  padding: 5px;
+  border-radius: 5px;
+  background-color: darkblue;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
 }
-
