@@ -8,3 +8,18 @@ export const isValidName = (name) => {
   const nameRegularEx = /^[a-z A-Z]+$/;
   return nameRegularEx.test(name);
 };
+
+export const MONTHS = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+];

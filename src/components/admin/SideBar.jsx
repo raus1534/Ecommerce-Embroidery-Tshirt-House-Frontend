@@ -1,5 +1,6 @@
 import "./css/Sidebar.css";
 import { MdLineStyle, MdOutlineProductionQuantityLimits } from "react-icons/md";
+import { TbReorder } from "react-icons/tb";
 
 import { FaUser } from "react-icons/fa";
 
@@ -28,6 +29,12 @@ export default function SideBar() {
               <li className="sidebarListItem">
                 <MdOutlineProductionQuantityLimits className="sidebarIcon" />
                 Products
+              </li>
+            </Link>
+            <Link to="/orders" className="link">
+              <li className="sidebarListItem">
+                <TbReorder className="sidebarIcon" />
+                Orders
               </li>
             </Link>
           </ul>

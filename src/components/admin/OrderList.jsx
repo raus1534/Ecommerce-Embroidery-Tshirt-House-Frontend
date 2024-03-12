@@ -4,53 +4,57 @@ import { MdDelete } from "react-icons/md";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useNotification } from "../../hooks";
-import { deleteProduct, getProducts } from "../../api/product";
+import { getOrderDetails } from "../../api/admin";
 
-export default function ProductList() {
-  const [products, setProducts] = useState([]);
+export default function OrderList() {
+  const [orders, setOrders] = useState([]);
 
   const { updateNotification } = useNotification();
 
-  const getProduct = async () => {
-    const { error, products } = await getProducts();
+  const getOrder = async () => {
+    const { error, orders } = await getOrderDetails(false);
+    console.log(orders);
     if (error) return updateNotification("error", error);
-    setProducts([...products]);
+    setOrders([...orders]);
   };
-
-  const updateProductList = (productId) => {
-    const newProductList = products.filter(
-      (product) => product._id !== productId
-    );
-    setProducts([...newProductList]);
-  };
+  useEffect(() => {
+    getOrder();
+    // eslint-disable-next-line
+  }, []);
 
   const handleDelete = async (productId) => {
-    console.log(productId);
-    const { message, error } = await deleteProduct(productId);
-    if (error) return updateNotification("error", error);
-    updateProductList(productId);
-    updateNotification("success", message);
+    // const { message, error } = await deleteUser(productId);
+    // if (error) return updateNotification("error", error);
+    // updateNotification("success", message);
+    // setProducts(products.filter((item) => item._id !== userId));
   };
 
   const columns = [
     { field: "_id", headerName: "ID", width: 220 },
     {
-      field: "product",
+      field: "products",
       headerName: "Product",
-      width: 200,
+      width: 90,
       renderCell: (params) => {
         return (
-          <div className="productListItem">
-            <img className="productListImg" src={params.row.img} alt="" />
-            {params.row.title}
-          </div>
+          <div className="productListItem">{params.row.products.length}</div>
         );
       },
     },
-    { field: "inStock", headerName: "Stock", width: 200 },
+    { field: "total", headerName: "Amount", width: 100 },
     {
-      field: "price",
-      headerName: "Price",
+      field: "paymentMethod",
+      headerName: "Payment Method",
+      width: 160,
+    },
+    {
+      field: "shippingAddress",
+      headerName: "Shipping Address",
+      width: 160,
+    },
+    {
+      field: "transactionCode",
+      headerName: "Code",
       width: 160,
     },
     {
@@ -60,8 +64,8 @@ export default function ProductList() {
       renderCell: (params) => {
         return (
           <>
-            <Link to={"/product/" + params.row._id}>
-              <button className="productListEdit">Edit</button>
+            <Link to={"/product/view/" + params.row._id}>
+              <button className="productListEdit">View</button>
             </Link>
             <MdDelete
               className="productListDelete"
@@ -72,19 +76,13 @@ export default function ProductList() {
       },
     },
   ];
-
-  useEffect(() => {
-    getProduct();
-    // eslint-disable-next-line
-  }, []);
-
   return (
     <div className="flex flex-col space-y-3 productList">
       <Link to="/product/create">
         <button className="font-bold productAddButton">CREATE</button>
       </Link>
       <DataGrid
-        rows={products}
+        rows={orders.reverse()}
         disableRowSelectionOnClick
         columns={columns}
         getRowId={(row) => row._id}
