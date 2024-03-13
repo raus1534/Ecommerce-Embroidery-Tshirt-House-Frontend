@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useNotification } from "../../hooks";
 import { deleteProduct, getProducts } from "../../api/product";
+import { AiFillEdit } from "react-icons/ai";
 
 export default function ProductList() {
   const [products, setProducts] = useState([]);
@@ -33,25 +34,42 @@ export default function ProductList() {
   };
 
   const columns = [
-    { field: "_id", headerName: "ID", width: 220 },
+    {
+      field: "_id",
+      headerName: "ID",
+      renderCell: (
+        params // Customize cell contents
+      ) => <div className="font-semibold">{params.value}</div>,
+    },
     {
       field: "product",
       headerName: "Product",
-      width: 200,
       renderCell: (params) => {
         return (
           <div className="productListItem">
             <img className="productListImg" src={params.row.img} alt="" />
-            {params.row.title}
+            <span className="font-semibold">{params.row.title}</span>
           </div>
         );
       },
     },
-    { field: "inStock", headerName: "Stock", width: 200 },
+    {
+      field: "inStock",
+      headerName: "Stock",
+      renderCell: (
+        params // Customize cell contents
+      ) => (
+        <div className="font-semibold capitalize">
+          {params.value.toString()}
+        </div>
+      ),
+    },
     {
       field: "price",
       headerName: "Price",
-      width: 160,
+      renderCell: (
+        params // Customize cell contents
+      ) => <div className="font-semibold">{"रु " + params.value}</div>,
     },
     {
       field: "action",
@@ -59,15 +77,16 @@ export default function ProductList() {
       width: 150,
       renderCell: (params) => {
         return (
-          <>
+          <div className="flex items-center justify-center space-x-2">
             <Link to={"/product/" + params.row._id}>
-              <button className="productListEdit">Edit</button>
+              <AiFillEdit size={22} className="userListEdit" />
             </Link>
             <MdDelete
-              className="productListDelete"
+              size={22}
+              className="userListDelete"
               onClick={() => handleDelete(params.row._id)}
             />
-          </>
+          </div>
         );
       },
     },
@@ -86,7 +105,15 @@ export default function ProductList() {
       <DataGrid
         rows={products}
         disableRowSelectionOnClick
-        columns={columns}
+        columns={columns.map((column) => ({
+          ...column,
+          flex: 1,
+          renderHeader: (params) => (
+            <div className="font-bold tracking-wider uppercase">
+              {params.field}
+            </div>
+          ),
+        }))}
         getRowId={(row) => row._id}
         initialState={{
           pagination: {
@@ -94,7 +121,6 @@ export default function ProductList() {
           },
         }}
         pageSizeOptions={[5, 10, 20]}
-        checkboxSelection
       />
     </div>
   );

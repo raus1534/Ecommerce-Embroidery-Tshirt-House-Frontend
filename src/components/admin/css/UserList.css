@@ -1,6 +1,6 @@
 .userList {
   flex: 6;
-  margin: 20px;
+  margin: 5px 20px;
 }
 .userListUser {
   display: flex;
@@ -14,15 +14,10 @@
   margin-right: 10px;
 }
 .userListEdit {
-  border: none;
-  border-radius: 10px;
-  padding: 5px 10px;
-  background-color: #3bb077;
-  color: rgb(142, 23, 23);
+  color: rgb(87, 237, 117);
   cursor: pointer;
-  margin-right: 20px;
 }
 .userListDelete {
-  color: red;
+  color: rgb(238, 56, 56);
   cursor: pointer;
 }

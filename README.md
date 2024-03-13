@@ -17,12 +17,12 @@ To run this project, you will need to add the following environment variables to
 
 #### [Firebase](https://firebase.google.com/) For Uploading Product Image
 
-`apiKey`
-`authDomain`
-`projectId`
-`storageBucket`
-`messagingSenderId`
-`appId`
+`REACT_APP_APIKEY`
+`REACT_APP_AUTHDOMAIN`
+`REACT_APP_PROJECTID`
+`REACT_APP_STORAGEBUCKET`
+`REACT_APP_MESSAGINGSENDERID`
+`REACT_APP_APPID`
 
 ## Deployment
 

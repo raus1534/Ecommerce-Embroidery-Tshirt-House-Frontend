@@ -1,6 +1,6 @@
 .productList {
   flex: 6;
-  margin: 20px;
+  margin: 5px 20px;
 }
 
 .productListItem {
@@ -8,8 +8,7 @@
 }
 .productListImg {
   width: 32px;
-  height: 32px;
-  border-radius: 50%;
+  height: 40px;
   object-fit: cover;
   margin-right: 10px;
 }
