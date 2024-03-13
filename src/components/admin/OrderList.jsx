@@ -82,9 +82,17 @@ export default function OrderList() {
         <button className="font-bold productAddButton">CREATE</button>
       </Link>
       <DataGrid
-        rows={orders.reverse()}
+        rows={orders}
         disableRowSelectionOnClick
-        columns={columns}
+        columns={columns.map((column) => ({
+          ...column,
+          flex: 1,
+          renderHeader: (params) => (
+            <div className="font-bold tracking-wider uppercase">
+              {params.field}
+            </div>
+          ),
+        }))}
         getRowId={(row) => row._id}
         initialState={{
           pagination: {
