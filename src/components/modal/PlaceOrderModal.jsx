@@ -6,8 +6,14 @@ import { placeOrder } from "../../api/order";
 import { useAuth, useNotification } from "../../hooks";
 import { useNavigate } from "react-router-dom";
 
+const defaultShippingDetail = {
+  shippingLocation: "",
+  shippingContact: "",
+};
 export default function PlaceOrderModal({ visible, onClose, userId }) {
-  const [shippingLocation, setShippingLocation] = useState("");
+  const [shippingDetail, setShippingDetail] = useState({
+    ...defaultShippingDetail,
+  });
   const navigate = useNavigate();
   const { updateNotification } = useNotification();
   const { setCart, setCartTotal } = useAuth();
@@ -32,14 +38,16 @@ export default function PlaceOrderModal({ visible, onClose, userId }) {
 
   const makePaymentViaKhalti = (data) =>
     (window.location.href = data.payment_url);
+  const { shippingLocation, shippingContact } = shippingDetail;
 
   const handlePayment = async (payment_method) => {
     const { formData, data, message } = await placeOrder(
       userId,
       shippingLocation,
+      shippingContact,
       payment_method
     );
-    if (message && payment_method === "cashOnDelivery") {
+    if (message && payment_method === "Cash On Delivery") {
       updateNotification(
         "success",
         "Order Placed Successfully ! You will receive the call sooner"
@@ -49,7 +57,12 @@ export default function PlaceOrderModal({ visible, onClose, userId }) {
       navigate("/");
     }
     if (payment_method === "eSewa") makePaymentViaEsewa(formData);
-    if (payment_method === "khalti") makePaymentViaKhalti(data);
+    if (payment_method === "Khalti") makePaymentViaKhalti(data);
+  };
+
+  const handleChange = ({ target }) => {
+    const { name, value } = target;
+    setShippingDetail({ ...shippingDetail, [name]: value });
   };
 
   if (!visible) return null;
@@ -58,35 +71,39 @@ export default function PlaceOrderModal({ visible, onClose, userId }) {
     <ModalContainer
       visible={visible}
       onClose={onClose}
-      clearShippingLocation={() => setShippingLocation("")}
+      clearShippingLocation={() =>
+        setShippingDetail({ ...defaultShippingDetail })
+      }
     >
       <div className="flex flex-col items-center space-y-5">
-        <div className="flex flex-col-reverse w-full">
-          <input
-            type="text"
-            className="w-full p-1 bg-transparent border-2 border-gray-700 rounded outline-none peer focus:border-black bg-none"
-            onChange={({ target }) => setShippingLocation(target.value)}
-          />
-          <label className="self-start font-semibold text-gray-700 peer-focus:text-black">
-            Shipping Location
-          </label>
-        </div>
+        <ShippingInput
+          name="shippingLocation"
+          value={shippingLocation}
+          label="Shipping Location"
+          onChange={handleChange}
+        />
+        <ShippingInput
+          name="shippingContact"
+          value={shippingContact}
+          label="Shipping Contact"
+          onChange={handleChange}
+        />
 
-        {shippingLocation && (
+        {shippingLocation && shippingContact && (
           <div
             className={`flex flex-col items-center w-full space-y-2 ${
               shippingLocation ? "drop-down" : ""
             }`}
           >
             <button
-              onClick={() => handlePayment("cashOnDelivery")}
+              onClick={() => handlePayment("Cash On Delivery")}
               className="w-full p-1 text-lg font-bold bg-blue-500 rounded-lg "
             >
               Cash On delivery
             </button>
             <span>OR</span>
             <div className="flex items-center justify-center">
-              <button type="button" onClick={() => handlePayment("khalti")}>
+              <button type="button" onClick={() => handlePayment("Khalti")}>
                 <img src={khalti} alt="khalti" className="w-40" />
               </button>
               <button type="button" onClick={() => handlePayment("eSewa")}>
@@ -99,3 +116,20 @@ export default function PlaceOrderModal({ visible, onClose, userId }) {
     </ModalContainer>
   );
 }
+
+const ShippingInput = ({ name, value, label, ...rest }) => {
+  return (
+    <div className="flex flex-col-reverse w-full">
+      <input
+        type="text"
+        name={name}
+        value={value}
+        className="w-full p-1 bg-transparent border-2 border-gray-700 rounded outline-none peer focus:border-black bg-none"
+        {...rest}
+      />
+      <label className="self-start font-semibold text-gray-700 peer-focus:text-black">
+        {label}
+      </label>
+    </div>
+  );
+};

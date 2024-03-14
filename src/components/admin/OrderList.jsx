@@ -1,10 +1,11 @@
 import "./css/productList.css";
 import { DataGrid } from "@mui/x-data-grid";
-import { MdDelete } from "react-icons/md";
+import { MdDelete, MdVisibility } from "react-icons/md";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useNotification } from "../../hooks";
 import { getOrderDetails } from "../../api/admin";
+import { AiFillEdit } from "react-icons/ai";
 
 export default function OrderList() {
   const [orders, setOrders] = useState([]);
@@ -30,32 +31,52 @@ export default function OrderList() {
   };
 
   const columns = [
-    { field: "_id", headerName: "ID", width: 220 },
+    { field: "_id", headerName: "ID" },
     {
       field: "products",
       headerName: "Product",
-      width: 90,
       renderCell: (params) => {
         return (
-          <div className="productListItem">{params.row.products.length}</div>
+          <div className="font-semibold productListItem">
+            {params.row.products.length}
+          </div>
         );
       },
     },
-    { field: "total", headerName: "Amount", width: 100 },
+    {
+      field: "total",
+      headerName: "Amount",
+      renderCell: (
+        params // Customize cell contents
+      ) => <div className="font-semibold">{params.value}</div>,
+    },
     {
       field: "paymentMethod",
       headerName: "Payment Method",
-      width: 160,
+      renderCell: (
+        params // Customize cell contents
+      ) => <div className="font-semibold">{params.value}</div>,
     },
     {
       field: "shippingAddress",
       headerName: "Shipping Address",
-      width: 160,
+      renderCell: (
+        params // Customize cell contents
+      ) => <div className="font-semibold">{params.value}</div>,
+    },
+    {
+      field: "shippingContact",
+      headerName: "Shipping Contact",
+      renderCell: (
+        params // Customize cell contents
+      ) => <div className="font-semibold">{params.value}</div>,
     },
     {
       field: "transactionCode",
       headerName: "Code",
-      width: 160,
+      renderCell: (
+        params // Customize cell contents
+      ) => <div className="font-semibold">{params.value}</div>,
     },
     {
       field: "action",
@@ -63,24 +84,17 @@ export default function OrderList() {
       width: 150,
       renderCell: (params) => {
         return (
-          <>
-            <Link to={"/product/view/" + params.row._id}>
-              <button className="productListEdit">View</button>
+          <div className="flex items-center justify-center space-x-2">
+            <Link to={"/order/" + params.row._id}>
+              <MdVisibility size={20} className=" text-[#8293E3]" />
             </Link>
-            <MdDelete
-              className="productListDelete"
-              onClick={() => handleDelete(params.row._id)}
-            />
-          </>
+          </div>
         );
       },
     },
   ];
   return (
     <div className="flex flex-col space-y-3 productList">
-      <Link to="/product/create">
-        <button className="font-bold productAddButton">CREATE</button>
-      </Link>
       <DataGrid
         rows={orders}
         disableRowSelectionOnClick
@@ -88,19 +102,13 @@ export default function OrderList() {
           ...column,
           flex: 1,
           renderHeader: (params) => (
-            <div className="font-bold tracking-wider uppercase">
+            <div className="font-semibold tracking-wide capitalize">
               {params.field}
             </div>
           ),
         }))}
         getRowId={(row) => row._id}
-        initialState={{
-          pagination: {
-            paginationModel: { page: 0, pageSize: 9 },
-          },
-        }}
         pageSizeOptions={[5, 10, 20]}
-        checkboxSelection
       />
     </div>
   );

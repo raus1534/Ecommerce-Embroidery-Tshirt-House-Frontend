@@ -3,6 +3,7 @@ import "../css/WidgetLg.css";
 import { getOrderDetails } from "../../../api/admin";
 import ReactTimeago from "react-timeago";
 import { MdVisibility } from "react-icons/md";
+import { Link } from "react-router-dom";
 
 export default function WidgetLg() {
   const [orders, setOrders] = useState([]);
@@ -35,9 +36,9 @@ export default function WidgetLg() {
             </td>
             <td className="text-center widgetLgAmount">रु {order.total}</td>
             <td className="text-center widgetLgAmount">
-              <button className=" rounded-xl">
+              <Link to={"/order/" + order._id} className=" rounded-xl">
                 <MdVisibility className=" text-[#8293E3]" />
-              </button>
+              </Link>
             </td>
           </tr>
         ))}

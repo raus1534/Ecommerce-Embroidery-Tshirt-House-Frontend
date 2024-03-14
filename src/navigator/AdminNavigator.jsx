@@ -8,6 +8,7 @@ import ProductList from "../components/admin/ProductList";
 import Product from "../components/admin/Product";
 import NewProduct from "../components/admin/NewProduct";
 import OrderList from "../components/admin/OrderList";
+import Order from "../components/admin/Order";
 
 export default function AdminNavigator() {
   return (
@@ -19,9 +20,10 @@ export default function AdminNavigator() {
           <Route path="/" element={<Home />} />
           <Route path="/users" element={<UserList />} />
           <Route path="/products" element={<ProductList />} />
-          <Route path="/orders" element={<OrderList />} />
           <Route path="/product/:productId" element={<Product />} />
           <Route path="/product/create" element={<NewProduct />} />
+          <Route path="/orders" element={<OrderList />} />
+          <Route path="/order/:orderId" element={<Order />} />
         </Routes>
       </div>
     </div>
