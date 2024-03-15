@@ -59,6 +59,29 @@ input[type="number"] {
   -moz-appearance: textfield;
 }
 
+/* switch */
+.switch input {
+  display: none;
+}
+.slider {
+  transition: 0.4s;
+  cursor: pointer;
+}
+.slider::before {
+  position: absolute;
+  content: "";
+  width: 50%;
+  height: 90%;
+  left: 0.5px;
+  bottom: 1.5px;
+  transition: 0.4s;
+  border-radius: 50%;
+  background-color: black;
+}
+input:checked + .slider::before {
+  transform: translateX(95%);
+}
+
 .test {
   border: 2px solid black;
 }

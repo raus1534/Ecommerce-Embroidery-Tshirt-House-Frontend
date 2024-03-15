@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { getUserDetails } from "../../api/admin";
 import { deleteUser } from "../../api/user";
 import { useNotification } from "../../hooks";
+import { Link } from "react-router-dom";
 
 export default function UserList() {
   const [users, setUsers] = useState([]);
@@ -71,7 +72,9 @@ export default function UserList() {
       renderCell: (params) => {
         return (
           <div className="flex items-center justify-center space-x-2">
-            <AiFillEdit size={22} className="userListEdit" />
+            <Link to={"/user/" + params.row._id}>
+              <AiFillEdit size={22} className="userListEdit" />
+            </Link>
             <MdDelete
               size={22}
               className="userListDelete"

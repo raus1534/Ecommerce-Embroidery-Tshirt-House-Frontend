@@ -25,6 +25,7 @@ export default function FeaturedInfo() {
   };
   useEffect(() => {
     getFeatureInfo();
+    // eslint-disable-next-line
   }, []);
 
   const { income, users, products, totalSales } = featureInfo;
@@ -40,8 +41,8 @@ export default function FeaturedInfo() {
       <FeatureItem
         avatar={<FaMoneyBillTrendUp size={40} />}
         title="This Month Sales"
-        detail={`रु ${income[1]?.total}`}
-        percentage={getPercentage()}
+        detail={`रु ${income[1]?.total}` || 0}
+        percentage={getPercentage() || 0}
       />
       <FeatureItem
         avatar={<FaUserAstronaut size={40} />}

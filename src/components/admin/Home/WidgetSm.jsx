@@ -3,6 +3,7 @@ import { MdVisibility } from "react-icons/md";
 import { FaUserAstronaut } from "react-icons/fa";
 import { useEffect, useState } from "react";
 import { getUserDetails } from "../../../api/admin";
+import { Link } from "react-router-dom";
 
 export default function WidgetSm() {
   const [users, setUsers] = useState([]);
@@ -31,9 +32,12 @@ export default function WidgetSm() {
             <div className="flex-1 widgetSmUser">
               <span className="widgetSmUsername">{user?.username}</span>
             </div>
-            <button className="widgetSmButton rounded-xl">
+            <Link
+              to={"/user/" + user?._id}
+              className="widgetSmButton rounded-xl"
+            >
               <MdVisibility className="widgetSmIcon text-[#8293E3]" />
-            </button>
+            </Link>
           </li>
         ))}
       </ul>

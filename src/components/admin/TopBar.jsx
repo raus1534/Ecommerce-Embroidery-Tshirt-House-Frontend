@@ -15,7 +15,12 @@ export default function TopBar() {
           <span className="logo">EmbroideryTshirtHouse</span>
         </div>
         <div className="topRight">
-          <button onClick={handleOnLogout}>Logout</button>
+          <button
+            className="p-2 text-sm tracking-wide uppercase"
+            onClick={handleOnLogout}
+          >
+            Logout
+          </button>
         </div>
       </div>
     </div>
