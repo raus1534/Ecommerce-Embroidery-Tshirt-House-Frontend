@@ -6,9 +6,12 @@ import { useEffect, useState } from "react";
 import { useNotification } from "../../hooks";
 import { deleteProduct, getProducts } from "../../api/product";
 import { AiFillEdit } from "react-icons/ai";
+import ConfirmModal from "../modal/ConfirmModal";
 
 export default function ProductList() {
   const [products, setProducts] = useState([]);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState(null);
 
   const { updateNotification } = useNotification();
 
@@ -25,12 +28,21 @@ export default function ProductList() {
     setProducts([...newProductList]);
   };
 
-  const handleDelete = async (productId) => {
-    console.log(productId);
-    const { message, error } = await deleteProduct(productId);
+  const handleDelete = async () => {
+    const { message, error } = await deleteProduct(selectedProduct);
     if (error) return updateNotification("error", error);
-    updateProductList(productId);
+    updateProductList(selectedProduct);
     updateNotification("success", message);
+    handleConfirmModalClose();
+  };
+  const visibleConfirmModal = (productId) => {
+    setSelectedProduct(productId);
+    setShowConfirmModal(true);
+  };
+
+  const handleConfirmModalClose = () => {
+    setShowConfirmModal(false);
+    setSelectedProduct(null);
   };
 
   const columns = [
@@ -84,7 +96,7 @@ export default function ProductList() {
             <MdDelete
               size={22}
               className="userListDelete"
-              onClick={() => handleDelete(params.row._id)}
+              onClick={() => visibleConfirmModal(params.row._id)}
             />
           </div>
         );
@@ -98,30 +110,37 @@ export default function ProductList() {
   }, []);
 
   return (
-    <div className="flex flex-col space-y-3 productList">
-      <Link to="/product/create">
-        <button className="font-bold productAddButton">CREATE</button>
-      </Link>
-      <DataGrid
-        rows={products}
-        disableRowSelectionOnClick
-        columns={columns.map((column) => ({
-          ...column,
-          flex: 1,
-          renderHeader: (params) => (
-            <div className="font-bold tracking-wider uppercase">
-              {params.field}
-            </div>
-          ),
-        }))}
-        getRowId={(row) => row._id}
-        initialState={{
-          pagination: {
-            paginationModel: { page: 0, pageSize: 9 },
-          },
-        }}
-        pageSizeOptions={[5, 10, 20]}
+    <>
+      <div className="flex flex-col space-y-3 productList">
+        <Link to="/product/create">
+          <button className="font-bold productAddButton">CREATE</button>
+        </Link>
+        <DataGrid
+          rows={products}
+          disableRowSelectionOnClick
+          columns={columns.map((column) => ({
+            ...column,
+            flex: 1,
+            renderHeader: (params) => (
+              <div className="font-bold tracking-wider uppercase">
+                {params.field}
+              </div>
+            ),
+          }))}
+          getRowId={(row) => row._id}
+          initialState={{
+            pagination: {
+              paginationModel: { page: 0, pageSize: 9 },
+            },
+          }}
+          pageSizeOptions={[5, 10, 20]}
+        />
+      </div>
+      <ConfirmModal
+        visible={showConfirmModal}
+        onClose={handleConfirmModalClose}
+        onConfirm={handleDelete}
       />
-    </div>
+    </>
   );
 }

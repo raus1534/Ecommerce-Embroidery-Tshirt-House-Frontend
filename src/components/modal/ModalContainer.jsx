@@ -9,7 +9,7 @@ export default function ModalContainer({
 }) {
   const handleOnClose = (e) => {
     if (e.target.id === "modal-container") {
-      clearShippingLocation();
+      if (clearShippingLocation) clearShippingLocation();
       onClose();
     }
   };

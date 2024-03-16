@@ -7,9 +7,12 @@ import { getUserDetails } from "../../api/admin";
 import { deleteUser } from "../../api/user";
 import { useNotification } from "../../hooks";
 import { Link } from "react-router-dom";
+import ConfirmModal from "../modal/ConfirmModal";
 
 export default function UserList() {
   const [users, setUsers] = useState([]);
+  const [selectedUser, setSelectedUser] = useState(null);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
   const { updateNotification } = useNotification();
 
   const getUsers = async () => {
@@ -17,11 +20,21 @@ export default function UserList() {
     setUsers([...users]);
   };
 
-  const handleDelete = async (userId) => {
-    const { message, error } = await deleteUser(userId);
+  const handleDelete = async () => {
+    const { message, error } = await deleteUser(selectedUser);
     if (error) return updateNotification("error", error);
     updateNotification("success", message);
-    setUsers(users.filter((item) => item._id !== userId));
+    setUsers(users.filter((item) => item._id !== selectedUser));
+    handleConfirmModalClose();
+  };
+
+  const visibleConfirmModal = (userId) => {
+    setShowConfirmModal(true);
+    setSelectedUser(userId);
+  };
+  const handleConfirmModalClose = () => {
+    setSelectedUser(null);
+    setShowConfirmModal(false);
   };
   const columns = [
     {
@@ -78,7 +91,7 @@ export default function UserList() {
             <MdDelete
               size={22}
               className="userListDelete"
-              onClick={() => handleDelete(params.row._id)}
+              onClick={() => visibleConfirmModal(params.row._id)}
             />
           </div>
         );
@@ -91,28 +104,35 @@ export default function UserList() {
   }, []);
 
   return (
-    <div className="font-bold userList">
-      <DataGrid
-        rows={users}
-        disableRowSelectionOnClick
-        columns={columns.map((column) => ({
-          ...column,
-          flex: 1,
-          renderHeader: (params) => (
-            <div className="font-bold tracking-wider uppercase">
-              {params.field}
-            </div>
-          ),
-        }))}
-        getRowId={(row) => row._id}
-        initialState={{
-          pagination: {
-            paginationModel: { page: 0, pageSize: 10 },
-          },
-        }}
-        pageSizeOptions={[5, 10, 20]}
-        // checkboxSelection
+    <>
+      <div className="font-bold userList">
+        <DataGrid
+          rows={users}
+          disableRowSelectionOnClick
+          columns={columns.map((column) => ({
+            ...column,
+            flex: 1,
+            renderHeader: (params) => (
+              <div className="font-bold tracking-wider uppercase">
+                {params.field}
+              </div>
+            ),
+          }))}
+          getRowId={(row) => row._id}
+          initialState={{
+            pagination: {
+              paginationModel: { page: 0, pageSize: 10 },
+            },
+          }}
+          pageSizeOptions={[5, 10, 20]}
+          // checkboxSelection
+        />
+      </div>
+      <ConfirmModal
+        visible={showConfirmModal}
+        onClose={handleConfirmModalClose}
+        onConfirm={handleDelete}
       />
-    </div>
+    </>
   );
 }
