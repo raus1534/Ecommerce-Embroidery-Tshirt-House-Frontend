@@ -1,6 +1,5 @@
 import React from "react";
 import styled from "styled-components";
-import { FaSearch } from "react-icons/fa";
 import { Badge } from "@mui/material";
 import { ShoppingCartOutlined } from "@mui/icons-material";
 import { mobile } from "../../responsive";
@@ -33,18 +32,6 @@ const Language = styled.span`
   ${mobile({ display: "none" })}
 `;
 
-const SearchContainer = styled.div`
-  border: 0.5px solid lightgray;
-  display: flex;
-  align-items: center;
-  margin-left: 25px;
-  padding: 5px;
-`;
-
-const Input = styled.input`
-  border: none;
-  ${mobile({ width: "50px" })}
-`;
 const Center = styled.div`
   flex: 1;
   text-align: center;
@@ -121,13 +108,15 @@ export default function Navbar() {
 
           {profile ? (
             <>
-              <MenuItem onClick={handleOnLogout}>LOGOUT</MenuItem>
-
               <MenuItem onClick={navigateToCart}>
                 <Badge badgeContent={cart.length} color="primary">
                   <ShoppingCartOutlined />
                 </Badge>
               </MenuItem>
+              <Link to="/my-orders">
+                <MenuItem>MY ORDER</MenuItem>
+              </Link>
+              <MenuItem onClick={handleOnLogout}>LOGOUT</MenuItem>
             </>
           ) : null}
         </Right>

@@ -10,6 +10,8 @@ import Announcement from "./components/user/Announcement";
 import Navbar from "./components/user/Navbar";
 import { useAuth } from "./hooks";
 import AdminNavigator from "./navigator/AdminNavigator";
+import UserOrderList from "./components/user/UserOrderList";
+import Order from "./components/user/Order";
 
 export default function App() {
   const { authInfo } = useAuth();
@@ -22,6 +24,8 @@ export default function App() {
       <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/my-orders" element={<UserOrderList />} />
+        <Route path="/order/:orderId" element={<Order/>} />
         {/* <Route path="/products/" element={<AllProducts />} /> */}
         <Route path="/products/:category" element={<ProductList />} />
         <Route path="/product/:productId" element={<ProductIndividual />} />

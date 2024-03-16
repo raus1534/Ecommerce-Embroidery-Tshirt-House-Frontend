@@ -2,12 +2,13 @@ import styled from "styled-components";
 import { mobile } from "../../responsive";
 import { useAuth, useNotification } from "../../hooks";
 import Footer from "./Footer";
-import { placeOrder } from "../../api/order";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Add, Delete, Remove } from "@mui/icons-material";
 import { removeFromCart, updateCart } from "../../api/cart";
 import PlaceOrderModal from "../modal/PlaceOrderModal";
+import { FaArrowLeft } from "react-icons/fa";
+import Empty from "./Empty";
 
 const Container = styled.div``;
 const Wrapper = styled.div`
@@ -25,6 +26,10 @@ const Top = styled.div`
   padding: 20px;
 `;
 const TopButton = styled.button`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2;
   padding: 10px;
   font-weight: 600;
   cursor: pointer;
@@ -188,10 +193,6 @@ export default function Cart() {
     setCart([...cart]);
   };
 
-  // const handleOnCheckOut = async () => {
-  //   const { message } = await placeOrder(authInfo?.profile?._id);
-  //   if (message) navigate("/");
-  // };
   const handleOnPlaceOrder = () => {
     setShowPlaceOrderModal(true);
   };
@@ -199,7 +200,7 @@ export default function Cart() {
 
   useEffect(() => {
     if (!userId) navigate("/", { replace: true });
-  }, []);
+  }, [navigate, userId]);
 
   return (
     <>
@@ -207,92 +208,100 @@ export default function Cart() {
         <Wrapper>
           <Title>Your Tshirt</Title>
           <Top>
-            <TopButton>CONTINUE SHOPPING</TopButton>
+            <Link to="/">
+              <TopButton>
+                {<FaArrowLeft className="mr-2" />}CONTINUE SHOPPING
+              </TopButton>
+            </Link>
             <TopTexts>
               <TopText>Shopping Bag({cart?.length})</TopText>
             </TopTexts>
           </Top>
-          <Bottom>
-            <Info>
-              {cart.map(({ productDetail, quantity }, index) => (
-                <Product key={index}>
-                  <ProductDetail>
-                    <Image src={productDetail.img} />
-                    <Details>
-                      <ProductName>
-                        <b>Product:</b> {productDetail.title}
-                      </ProductName>
-                      <ProductId>
-                        <b>ID:</b> {productDetail._id}
-                      </ProductId>
-                      <ProductColor color={productDetail.color} />
-                      <ProductSize>
-                        <b>Size:</b> {productDetail.size}
-                      </ProductSize>
-                    </Details>
-                  </ProductDetail>
-                  <PriceDetail>
-                    <ProductAmountContainer>
-                      <Remove
+          {cart.length ? (
+            <Bottom>
+              <Info>
+                {cart.map(({ productDetail, quantity }, index) => (
+                  <Product key={index}>
+                    <ProductDetail>
+                      <Image src={productDetail.img} />
+                      <Details>
+                        <ProductName>
+                          <b>Product:</b> {productDetail.title}
+                        </ProductName>
+                        <ProductId>
+                          <b>ID:</b> {productDetail._id}
+                        </ProductId>
+                        <ProductColor color={productDetail.color} />
+                        <ProductSize>
+                          <b>Size:</b> {productDetail.size}
+                        </ProductSize>
+                      </Details>
+                    </ProductDetail>
+                    <PriceDetail>
+                      <ProductAmountContainer>
+                        <Remove
+                          onClick={() =>
+                            handleOnChangeProduct(
+                              "decrease",
+                              index,
+                              productDetail._id
+                            )
+                          }
+                        />
+                        <ProductAmount>{quantity}</ProductAmount>
+                        <Add
+                          onClick={() =>
+                            handleOnChangeProduct(
+                              "increase",
+                              index,
+                              productDetail._id
+                            )
+                          }
+                        />
+                      </ProductAmountContainer>
+
+                      <Delete
+                        className="text-red-500"
                         onClick={() =>
-                          handleOnChangeProduct(
-                            "decrease",
-                            index,
-                            productDetail._id
+                          removeProductFromCart(
+                            productDetail._id,
+                            productDetail.price * quantity,
+                            index
                           )
                         }
                       />
-                      <ProductAmount>{quantity}</ProductAmount>
-                      <Add
-                        onClick={() =>
-                          handleOnChangeProduct(
-                            "increase",
-                            index,
-                            productDetail._id
-                          )
-                        }
-                      />
-                    </ProductAmountContainer>
 
-                    <Delete
-                      className="text-red-500"
-                      onClick={() =>
-                        removeProductFromCart(
-                          productDetail._id,
-                          productDetail.price * quantity,
-                          index
-                        )
-                      }
-                    />
+                      <ProductPrice>
+                        Rs {productDetail.price * quantity}
+                      </ProductPrice>
+                    </PriceDetail>
+                  </Product>
+                ))}
+                <Hr />
+              </Info>
+              <Summary>
+                <SummaryTitle>ORDER SUMMARY</SummaryTitle>
+                <SummaryItem>
+                  <SummaryItemText>Subtotal</SummaryItemText>
+                  <SummaryItemPrice>Rs {cartTotal}</SummaryItemPrice>
+                </SummaryItem>
+                <SummaryItem>
+                  <SummaryItemText>Estimated Shipping</SummaryItemText>
+                  <SummaryItemPrice>Rs {cartTotal ? 110 : 0}</SummaryItemPrice>
+                </SummaryItem>
+                <SummaryItem type="total">
+                  <SummaryItemText>Total</SummaryItemText>
+                  <SummaryItemPrice>
+                    Rs {cartTotal ? cartTotal + 110 : 0}
+                  </SummaryItemPrice>
+                </SummaryItem>
 
-                    <ProductPrice>
-                      Rs {productDetail.price * quantity}
-                    </ProductPrice>
-                  </PriceDetail>
-                </Product>
-              ))}
-              <Hr />
-            </Info>
-            <Summary>
-              <SummaryTitle>ORDER SUMMARY</SummaryTitle>
-              <SummaryItem>
-                <SummaryItemText>Subtotal</SummaryItemText>
-                <SummaryItemPrice>Rs {cartTotal}</SummaryItemPrice>
-              </SummaryItem>
-              <SummaryItem>
-                <SummaryItemText>Estimated Shipping</SummaryItemText>
-                <SummaryItemPrice>Rs {cartTotal ? 110 : 0}</SummaryItemPrice>
-              </SummaryItem>
-              <SummaryItem type="total">
-                <SummaryItemText>Total</SummaryItemText>
-                <SummaryItemPrice>
-                  Rs {cartTotal ? cartTotal + 110 : 0}
-                </SummaryItemPrice>
-              </SummaryItem>
-
-              <Button onClick={handleOnPlaceOrder}>PLACE ORDER</Button>
-            </Summary>
-          </Bottom>
+                <Button onClick={handleOnPlaceOrder}>PLACE ORDER</Button>
+              </Summary>
+            </Bottom>
+          ) : (
+            <Empty emptyMessage="Cart is Empty" />
+          )}
         </Wrapper>
         <Footer />
       </Container>

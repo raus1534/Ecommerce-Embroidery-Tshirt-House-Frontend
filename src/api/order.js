@@ -64,3 +64,20 @@ export const updateOrderStatus = async (orderId) => {
     return { error: error.message || error };
   }
 };
+export const getAllOrders = async (userId) => {
+  const auth_token = localStorage.getItem("auth-token");
+
+  try {
+    const { data } = await client.get("/order/order-detail/" + userId, {
+      headers: {
+        authorization: auth_token,
+        accept: "application/json",
+      },
+    });
+    return data;
+  } catch (error) {
+    const { response } = error;
+    if (response?.data) return response.data;
+    return { error: error.message || error };
+  }
+};
