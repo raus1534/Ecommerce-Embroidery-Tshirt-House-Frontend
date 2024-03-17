@@ -84,6 +84,22 @@ export default function SideBar() {
                 Orders
               </li>
             </Link>
+            <Link
+              to="/newsletter"
+              className="link"
+              onClick={() => {
+                setActive("newsletter");
+              }}
+            >
+              <li
+                className={`sidebarListItem ${
+                  active === "newsletter" ? "active" : ""
+                }`}
+              >
+                <TbReorder className="sidebarIcon" />
+                News Letter
+              </li>
+            </Link>
           </ul>
         </div>
       </div>

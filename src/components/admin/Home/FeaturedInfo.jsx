@@ -33,6 +33,9 @@ export default function FeaturedInfo() {
   const getPercentage = () => {
     const perc =
       ((income[1]?.total - income[0]?.total) / income[0]?.total) * 100;
+
+    if (isNaN(perc)) return 0;
+
     return perc.toFixed(1);
   };
 
@@ -41,8 +44,8 @@ export default function FeaturedInfo() {
       <FeatureItem
         avatar={<FaMoneyBillTrendUp size={40} />}
         title="This Month Sales"
-        detail={`रु ${income[1]?.total}` || 0}
-        percentage={getPercentage() || 0}
+        detail={`रु ${income[1]?.total || 0}`}
+        percentage={getPercentage()}
       />
       <FeatureItem
         avatar={<FaUserAstronaut size={40} />}
@@ -57,7 +60,7 @@ export default function FeaturedInfo() {
       <FeatureItem
         avatar={<FaMoneyBillTrendUp size={40} />}
         title="Total Revenue"
-        detail={`रु ${totalSales}`}
+        detail={`रु ${totalSales || 0}`}
       />
     </div>
   );
@@ -78,7 +81,7 @@ const FeatureItem = ({ title, detail, avatar, percentage }) => {
           >
             {detail}
           </span>
-          {percentage && (
+          {percentage ? (
             <div className="flex">
               <span className="ml-2 text-sm text-gray-600 whitespace-nowrap">{`${percentage} %`}</span>
               <span className="ml-2 text-base text-gray-600">
@@ -89,6 +92,8 @@ const FeatureItem = ({ title, detail, avatar, percentage }) => {
                 )}
               </span>
             </div>
+          ) : (
+            ""
           )}
         </div>
         <span className="text-base text-gray-600">{title}</span>

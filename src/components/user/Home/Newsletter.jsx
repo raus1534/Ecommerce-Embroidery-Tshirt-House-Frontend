@@ -2,6 +2,10 @@ import styled from "styled-components";
 
 import { IoMdSend } from "react-icons/io";
 import { mobile } from "../../../responsive";
+import { useAuth, useNotification } from "../../../hooks";
+import { useState } from "react";
+import { isValidEmail } from "../../../utils/helper";
+import { publishNewsLetter } from "../../../api/user";
 
 const Container = styled.div`
   height: 60vh;
@@ -44,19 +48,36 @@ const Button = styled.button`
   color: white;
 `;
 
-const Newsletter = () => {
+export default function Newsletter() {
+  const [email, setEmail] = useState("");
+  const { authInfo } = useAuth();
+  const { updateNotification } = useNotification();
+  const userId = authInfo?.profile?._id;
+
+  const publishUserNewsLetter = async () => {
+    if (!userId) return updateNotification("error", "You Must Be Logged In");
+    if (!isValidEmail(email))
+      return updateNotification("error", "Invalid Email");
+    const { message, error } = await publishNewsLetter(userId, email);
+    if (error) return updateNotification("error", error);
+    updateNotification("success", message);
+    setEmail("");
+  };
   return (
     <Container>
       <Title>Newsletter</Title>
       <Desc>Get timely updates from your favourite products.</Desc>
       <InputContainer>
-        <Input placeholder="Your Email" />
-        <Button>
+        <Input
+          placeholder="Your Email"
+          name="email"
+          value={email}
+          onChange={({ target }) => setEmail(target.value)}
+        />
+        <Button onClick={publishUserNewsLetter}>
           <IoMdSend />
         </Button>
       </InputContainer>
     </Container>
   );
-};
-
-export default Newsletter;
+}

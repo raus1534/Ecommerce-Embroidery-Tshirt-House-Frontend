@@ -8,6 +8,7 @@ import { deleteUser } from "../../api/user";
 import { useNotification } from "../../hooks";
 import { Link } from "react-router-dom";
 import ConfirmModal from "../modal/ConfirmModal";
+import Empty from "../user/Empty";
 
 export default function UserList() {
   const [users, setUsers] = useState([]);
@@ -106,27 +107,31 @@ export default function UserList() {
   return (
     <>
       <div className="font-bold userList">
-        <DataGrid
-          rows={users}
-          disableRowSelectionOnClick
-          columns={columns.map((column) => ({
-            ...column,
-            flex: 1,
-            renderHeader: (params) => (
-              <div className="font-bold tracking-wider uppercase">
-                {params.field}
-              </div>
-            ),
-          }))}
-          getRowId={(row) => row._id}
-          initialState={{
-            pagination: {
-              paginationModel: { page: 0, pageSize: 10 },
-            },
-          }}
-          pageSizeOptions={[5, 10, 20]}
-          // checkboxSelection
-        />
+        {users.length ? (
+          <DataGrid
+            rows={users}
+            disableRowSelectionOnClick
+            columns={columns.map((column) => ({
+              ...column,
+              flex: 1,
+              renderHeader: (params) => (
+                <div className="font-bold tracking-wider uppercase">
+                  {params.colDef.headerName}
+                </div>
+              ),
+            }))}
+            getRowId={(row) => row._id}
+            initialState={{
+              pagination: {
+                paginationModel: { page: 0, pageSize: 10 },
+              },
+            }}
+            pageSizeOptions={[5, 10, 20]}
+            // checkboxSelection
+          />
+        ) : (
+          <Empty emptyMessage="No Users Yet" />
+        )}
       </div>
       <ConfirmModal
         visible={showConfirmModal}

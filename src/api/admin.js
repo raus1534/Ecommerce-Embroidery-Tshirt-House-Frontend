@@ -88,3 +88,21 @@ export const getOrderStats = async () => {
     return { error: error.message || error };
   }
 };
+
+export const getNewsLetterDetails = async () => {
+  const auth_token = localStorage.getItem("auth-token");
+
+  try {
+    const { data } = await client.get("/admin/get-newsletters", {
+      headers: {
+        authorization: auth_token,
+        accept: "application/json",
+      },
+    });
+    return data;
+  } catch (error) {
+    const { response } = error;
+    if (response?.data) return response.data;
+    return { error: error.message || error };
+  }
+};

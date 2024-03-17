@@ -7,6 +7,7 @@ import { useNotification } from "../../hooks";
 import { deleteProduct, getProducts } from "../../api/product";
 import { AiFillEdit } from "react-icons/ai";
 import ConfirmModal from "../modal/ConfirmModal";
+import Empty from "../user/Empty";
 
 export default function ProductList() {
   const [products, setProducts] = useState([]);
@@ -112,29 +113,35 @@ export default function ProductList() {
   return (
     <>
       <div className="flex flex-col space-y-3 productList">
-        <Link to="/product/create">
-          <button className="font-bold productAddButton">CREATE</button>
-        </Link>
-        <DataGrid
-          rows={products}
-          disableRowSelectionOnClick
-          columns={columns.map((column) => ({
-            ...column,
-            flex: 1,
-            renderHeader: (params) => (
-              <div className="font-bold tracking-wider uppercase">
-                {params.field}
-              </div>
-            ),
-          }))}
-          getRowId={(row) => row._id}
-          initialState={{
-            pagination: {
-              paginationModel: { page: 0, pageSize: 9 },
-            },
-          }}
-          pageSizeOptions={[5, 10, 20]}
-        />
+        {products.length ? (
+          <>
+            <Link to="/product/create">
+              <button className="font-bold productAddButton">CREATE</button>
+            </Link>
+            <DataGrid
+              rows={products}
+              disableRowSelectionOnClick
+              columns={columns.map((column) => ({
+                ...column,
+                flex: 1,
+                renderHeader: (params) => (
+                  <div className="font-bold tracking-wider uppercase">
+                    {params.colDef.headerName}
+                  </div>
+                ),
+              }))}
+              getRowId={(row) => row._id}
+              initialState={{
+                pagination: {
+                  paginationModel: { page: 0, pageSize: 9 },
+                },
+              }}
+              pageSizeOptions={[5, 10, 20]}
+            />
+          </>
+        ) : (
+          <Empty emptyMessage="No Products Yet" />
+        )}
       </div>
       <ConfirmModal
         visible={showConfirmModal}

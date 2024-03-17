@@ -2,7 +2,6 @@ import React from "react";
 import { Route, Routes } from "react-router-dom";
 import Home from "../components/admin/Home/Home";
 import TopBar from "../components/admin/TopBar";
-import SideBar from "../components/admin/SideBar";
 import UserList from "../components/admin/UserList";
 import ProductList from "../components/admin/ProductList";
 import Product from "../components/admin/Product";
@@ -10,6 +9,8 @@ import NewProduct from "../components/admin/NewProduct";
 import OrderList from "../components/admin/OrderList";
 import Order from "../components/admin/Order";
 import User from "../components/admin/User";
+import NewsLetter from "../components/admin/NewsLetter";
+import SideBar from "../components/admin/SideBar";
 
 export default function AdminNavigator() {
   return (
@@ -26,6 +27,7 @@ export default function AdminNavigator() {
           <Route path="/product/create" element={<NewProduct />} />
           <Route path="/orders" element={<OrderList />} />
           <Route path="/order/:orderId" element={<Order />} />
+          <Route path="/newsletter" element={<NewsLetter />} />
         </Routes>
       </div>
     </div>
