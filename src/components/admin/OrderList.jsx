@@ -63,9 +63,17 @@ export default function OrderList() {
         params // Customize cell contents
       ) => <div className="font-semibold">{params.value}</div>,
     },
+
     {
       field: "transactionCode",
       headerName: "Code",
+      renderCell: (
+        params // Customize cell contents
+      ) => <div className="font-semibold">{params.value}</div>,
+    },
+    {
+      field: "status",
+      headerName: "Status",
       renderCell: (
         params // Customize cell contents
       ) => <div className="font-semibold">{params.value}</div>,

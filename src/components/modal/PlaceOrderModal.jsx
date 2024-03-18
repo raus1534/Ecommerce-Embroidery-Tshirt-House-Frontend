@@ -10,6 +10,14 @@ const defaultShippingDetail = {
   shippingLocation: "",
   shippingContact: "",
 };
+
+const validateShippingDetail = (shippingDetail) => {
+  const { shippingLocation, shippingContact } = shippingDetail;
+  if (!shippingLocation) return { ok: false, error: "Location Is Missing" };
+  if (!shippingContact) return { ok: false, error: "Contact Is Missing" };
+  if (isNaN(shippingContact)) return { ok: false, error: "Invalid Contact" };
+  return { ok: true };
+};
 export default function PlaceOrderModal({ visible, onClose, userId }) {
   const [shippingDetail, setShippingDetail] = useState({
     ...defaultShippingDetail,
@@ -41,6 +49,8 @@ export default function PlaceOrderModal({ visible, onClose, userId }) {
   const { shippingLocation, shippingContact } = shippingDetail;
 
   const handlePayment = async (payment_method) => {
+    const { ok, error } = validateShippingDetail(shippingDetail);
+    if (!ok) return updateNotification("error", error);
     const { formData, data, message } = await placeOrder(
       userId,
       shippingLocation,
@@ -85,6 +95,7 @@ export default function PlaceOrderModal({ visible, onClose, userId }) {
         <ShippingInput
           name="shippingContact"
           value={shippingContact}
+          type="number"
           label="Shipping Contact"
           onChange={handleChange}
         />
@@ -117,11 +128,11 @@ export default function PlaceOrderModal({ visible, onClose, userId }) {
   );
 }
 
-const ShippingInput = ({ name, value, label, ...rest }) => {
+const ShippingInput = ({ name, value, label, type, ...rest }) => {
   return (
     <div className="flex flex-col-reverse w-full">
       <input
-        type="text"
+        type={type || "text"}
         name={name}
         value={value}
         className="w-full p-1 bg-transparent border-2 border-gray-700 rounded outline-none peer focus:border-black bg-none"

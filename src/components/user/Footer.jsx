@@ -49,7 +49,10 @@ const Center = styled.div`
 `;
 
 const Title = styled.h3`
-  margin-bottom: 30px;
+  margin-bottom: 20px;
+  text-transform: uppercase;
+  font-weight: bold;
+  letter-spacing: 2px;
 `;
 
 const List = styled.ul`
@@ -75,7 +78,8 @@ const ContactItem = styled.div`
   align-items: center;
 `;
 const Payment = styled.img`
-  width: 30%;
+  width: 20%;
+  height: 20%;
 `;
 const Footer = () => {
   return (
@@ -104,8 +108,12 @@ const Footer = () => {
           <ListItem>
             <Link to="/cart">Cart</Link>
           </ListItem>
-          <ListItem>Man Fashion</ListItem>
-          <ListItem>Woman Fashion</ListItem>
+          <ListItem>
+            <Link to="/products/man">Man Fashion</Link>
+          </ListItem>
+          <ListItem>
+            <Link to="/products/woman">Woman Fashion</Link>
+          </ListItem>
           <ListItem>Terms</ListItem>
         </List>
       </Center>
@@ -123,7 +131,7 @@ const Footer = () => {
           <IoMdMail style={{ marginRight: "10px" }} />
           embroidery330@gmail.com
         </ContactItem>
-        <div className="flex">
+        <div className="flex items-center">
           <Payment src={Khalti} />
           <Payment src={eSewa} />
         </div>

@@ -11,19 +11,19 @@ const Container = styled.div`
 const categories = [
   {
     id: 1,
-    img: require("../../../image/Mandala.png"),
+    img: require("../../../image/4.png"),
     title: "Mandala Prints",
     cat: "woman",
   },
   {
     id: 2,
-    img: require("../../../image/18.png"),
+    img: require("../../../image/5.png"),
     title: "Cultural Symbols Prints",
-    cat: "man",
+    cat: "men",
   },
   {
     id: 3,
-    img: require("../../../image/16.png"),
+    img: require("../../../image/6.png"),
     title: "Plain Tshirts",
     cat: "unisex",
   },

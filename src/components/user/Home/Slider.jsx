@@ -50,7 +50,6 @@ const Slide = styled.div`
 `;
 const ImgContainer = styled.div`
   height: 100%;
-
   flex: 1;
 `;
 
@@ -64,6 +63,7 @@ const InfoContainer = styled.div`
 
 const Title = styled.h1`
   font-size: 70px;
+  white-space: nowrap;
 `;
 const Desc = styled.p`
   margin: 50px 0px;
@@ -79,33 +79,42 @@ const Button = styled.button`
   color: white;
   cursor: pointer;
 `;
-const sliderItems = [
+
+function shuffleArray(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1)); // Generate random index from 0 to i
+    [array[i], array[j]] = [array[j], array[i]]; // Swap elements at i and j
+  }
+  return array;
+}
+
+const sliderItems = shuffleArray([
   {
     id: 1,
-    img: require("../../../image/MandalaDesignTshirt.png"),
+    img: require("../../../image/1.png"),
     title: "Mandala Designs",
-    desc: "Elevate your style with our Mandala Design T-shirt, a blend of intricate patterns and spiritual symbolism",
+    desc: "Elevate your style with our Mandala Design T-shirt, a blend of intricate patterns and spiritual symbolism.",
     bg: "f5fafd",
   },
 
   {
     id: 2,
-    img: require("../../../image/BauchaMaichaTshirtBlue.png"),
+    img: require("../../../image/2.png"),
     title: "Baucha Maicha Designs",
-    desc: "Elevate your fashion game with these bold, eye-catching prints that celebrate the spirit of individuality and cultural diversity. Embrace the distinctive charm of Baucha Maichha T-shirt prints and make a statement that is as unique as you are.",
+    desc: "Elevate your fashion game with these bold, eye-catching prints that celebrate the spirit of individuality and cultural diversity.",
     bg: "f5fafd",
   },
 
   {
     id: 3,
-    img: require("../../../image/15.png"),
+    img: require("../../../image/3.png"),
     title: "Plain Designs",
-    desc: "Discover the epitome of simplicity and versatility with our Plain T-shirts collection. ",
+    desc: "Discover the epitome of simplicity and versatility with our Plain T-shirts collection.",
     bg: "f5fafd",
   },
-];
+]);
 
-const Slider = () => {
+export default function Slider() {
   const [slideIndex, setSlideIndex] = useState(0);
   //using slide arrays
 
@@ -130,7 +139,7 @@ const Slider = () => {
             <InfoContainer>
               <Title>{item.title}</Title>
               <Desc>{item.desc}</Desc>
-              <Link to="/products/">
+              <Link to="/products/woman">
                 <Button>SHOP NOW</Button>
               </Link>
             </InfoContainer>
@@ -142,6 +151,4 @@ const Slider = () => {
       </Arrow>
     </Container>
   );
-};
-
-export default Slider;
+}

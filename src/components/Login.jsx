@@ -2,6 +2,7 @@ import styled from "styled-components";
 import { mobile } from "../responsive";
 import { useState } from "react";
 import { useAuth, useNotification } from "../hooks";
+import { Link } from "react-router-dom";
 
 const Container = styled.div`
   height: 87vh;
@@ -51,13 +52,6 @@ const Button = styled.button`
   }
 `;
 
-const Link = styled.a`
-  margin: 5px 0px;
-  font-size: 12px;
-  text-decoration: underline;
-  cursor: pointer;
-`;
-
 const validateLoginInInfo = (loginInfo) => {
   const { username, password } = loginInfo;
   if (!username.trim()) return { ok: false, error: "Username is Missing" };
@@ -104,7 +98,7 @@ export default function Login() {
           />
           <Button onClick={handleClick}>LOGIN</Button>
           {/* <Link>DO NOT YOU REMEMBER THE PASSWORD?</Link> */}
-          <Link to="/register">CREATE A NEW ACCOUNT</Link>
+          <Link to="/register" className="pt-2 text-sm">CREATE A NEW ACCOUNT</Link>
         </Form>
       </Wrapper>
     </Container>

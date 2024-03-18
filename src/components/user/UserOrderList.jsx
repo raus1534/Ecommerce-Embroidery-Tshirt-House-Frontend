@@ -62,7 +62,7 @@ export default function UserOrderList() {
         return (
           <div className="flex items-center justify-center space-x-2">
             <Link to={"/order/" + params.row._id}>
-              <MdVisibility size={20} className=" text-[#8293E3]" />
+              <MdVisibility size={20} className=" text-[#8293E3] ml-3" />
             </Link>
           </div>
         );

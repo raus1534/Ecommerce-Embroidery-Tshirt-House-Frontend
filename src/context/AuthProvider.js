@@ -36,7 +36,7 @@ export default function AuthProvider({ children }) {
       updateNotification("error", "Session Expired. Please Log In Again.");
       return handleLogout();
     }
-    const { existingCart, total } = await getCartProduct(user._id);
+    const { existingCart, total } = await getCartProduct(user?._id);
     if (existingCart) {
       setCart([...existingCart]);
       setCartTotal(total);

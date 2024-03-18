@@ -59,7 +59,7 @@ export default function ProductList() {
       headerName: "Product",
       renderCell: (params) => {
         return (
-          <div className="productListItem">
+          <div className="flex items-center justify-center productListItem">
             <img className="productListImg" src={params.row.img} alt="" />
             <span className="font-semibold">{params.row.title}</span>
           </div>
@@ -113,11 +113,11 @@ export default function ProductList() {
   return (
     <>
       <div className="flex flex-col space-y-3 productList">
+        <Link to="/product/create">
+          <button className="font-bold productAddButton">CREATE</button>
+        </Link>
         {products.length ? (
           <>
-            <Link to="/product/create">
-              <button className="font-bold productAddButton">CREATE</button>
-            </Link>
             <DataGrid
               rows={products}
               disableRowSelectionOnClick

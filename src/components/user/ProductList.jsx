@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 import { mobile } from "../../responsive";
-import { useLocation } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useState } from "react";
 import Newsletter from "./Home/Newsletter";
 import Products from "./Products";
@@ -33,23 +33,22 @@ const Select = styled.select`
 `;
 const Option = styled.option``;
 
-const ProductList = () => {
-  const location = useLocation();
-  const cat = location.pathname.split("/")[2];
+export default function ProductList() {
+  const { category } = useParams();
   const [filters, setFilters] = useState({});
   const [sort, setSort] = useState("newest");
 
-  const handleFilters = (e) => {
-    const value = e.target.value;
+  const handleFilters = ({ target }) => {
+    const { name, value } = target;
     setFilters({
       ...filters,
-      [e.target.name]: value,
+      [name]: value,
     });
   };
 
   return (
     <Container>
-      <Title>{cat}</Title>
+      <Title className="text-xl uppercase">{category}</Title>
       <FilterContainer>
         <Filter>
           <FilterText>Filter Products:</FilterText>
@@ -80,11 +79,9 @@ const ProductList = () => {
           <Option value="desc">Price (desc)</Option>
         </Select>
       </FilterContainer>
-      <Products cat={cat} filters={filters} sort={sort} />
+      <Products cat={category} filters={filters} sort={sort} />
       <Newsletter />
       <Footer />
     </Container>
   );
-};
-
-export default ProductList;
+}

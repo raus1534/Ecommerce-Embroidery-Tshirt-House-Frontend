@@ -24,7 +24,7 @@ const Container = styled.div`
 `;
 const Wrapper = styled.div`
   width: 40%;
-  padding: 20px;
+  padding: 20px 10px;
   background-color: white;
   ${mobile({ width: "75%" })}
 `;
@@ -132,9 +132,10 @@ export default function Register() {
             placeholder="confirm password"
             onChange={handleChange}
           />
-          <Agreement>
+          <Agreement className="tracking-wider">
             By creating an account, I consent to the processing of my personal
-            data in accordance with the <b>PRIVACY POLICY</b>
+            data in accordance with the <br />
+            <b>PRIVACY POLICY</b>
           </Agreement>
           <Button onClick={handleRegister}>CREATE</Button>
         </Form>

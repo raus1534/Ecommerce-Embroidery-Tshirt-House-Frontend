@@ -197,7 +197,11 @@ export default function NewProduct() {
               </select>
             </div>
           </div>
-          <SubmitBtn type="submit" busy={busy} className="addProductButton">
+          <SubmitBtn
+            type="submit"
+            busy={busy}
+            className="flex-1 addProductButton"
+          >
             Create
           </SubmitBtn>
         </div>
