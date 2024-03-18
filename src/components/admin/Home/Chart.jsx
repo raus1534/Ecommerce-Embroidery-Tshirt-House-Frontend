@@ -24,7 +24,6 @@ export default function Chart() {
   const getStats = async () => {
     const { userStats } = await getUserStats();
     const { ordersStats } = await getOrderStats();
-    console.log(ordersStats);
     if (!userStats)
       return updateNotification("error", "Error Fetching The User Stats");
     if (!ordersStats)

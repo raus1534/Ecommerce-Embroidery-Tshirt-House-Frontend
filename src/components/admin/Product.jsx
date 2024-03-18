@@ -2,7 +2,6 @@ import { useNavigate, useParams } from "react-router-dom";
 import "./css/product.css";
 import { useEffect, useState } from "react";
 import { getProductDetail, updateProduct } from "../../api/product";
-import { MONTHS } from "../../utils/helper";
 import { useNotification } from "../../hooks";
 import { app } from "../../utils/firebase";
 import SubmitBtn from "../SubmitBtn";
@@ -37,7 +36,6 @@ export default function Product() {
     const { error, product } = await getProductDetail(productId);
     if (error) return updateNotification("error", error);
     if (!product) return updateNotification("error", "Product Not Found");
-    console.log(product);
     setPosterForUI(product.img);
     setProductDetail({ ...product, img: null });
   };
@@ -55,14 +53,12 @@ export default function Product() {
 
   const handleUpdate = async (e) => {
     e.preventDefault();
-    console.log(productDetail);
     const { ok, error } = validateProductInfo(productDetail);
     if (!ok) return updateNotification("error", error);
     setBusy(true);
 
     if (productDetail?.img) {
       const fileName = new Date().getTime() + productDetail?.img.name;
-      console.log(productDetail.img.name);
       const storage = getStorage(app);
       const storageRef = ref(storage, fileName);
       const uploadTask = uploadBytesResumable(storageRef, productDetail?.img);
@@ -97,7 +93,6 @@ export default function Product() {
           // Handle successful uploads on complete
           getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
             const product = { ...productDetail, img: downloadURL };
-            console.log(product);
             const { error, message } = await updateProduct(product, productId);
             if (error) return updateNotification("error", error);
             setBusy(false);
@@ -134,8 +129,8 @@ export default function Product() {
 
   useEffect(() => {
     getProductDetails();
-    // getStats();
-  }, [productId, MONTHS]);
+    // eslint-disable-next-line
+  }, [productId]);
 
   return (
     <>

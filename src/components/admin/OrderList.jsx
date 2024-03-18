@@ -14,7 +14,6 @@ export default function OrderList() {
 
   const getOrder = async () => {
     const { error, orders } = await getOrderDetails(false);
-    console.log(orders);
     if (error) return updateNotification("error", error);
     setOrders([...orders]);
   };

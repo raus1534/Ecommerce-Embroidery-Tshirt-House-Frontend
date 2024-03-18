@@ -26,11 +26,15 @@ export default function AuthProvider({ children }) {
     setAuthInfo({ ...authInfo, isPending: true });
     const token = localStorage.getItem("auth-token");
     if (!token) return setAuthInfo({ ...authInfo, isPending: false });
-    const { error, user } = await authUser();
+    const { error, user, tokenExpire } = await authUser();
 
     if (error) {
       updateNotification("error", error);
       return setAuthInfo({ ...authInfo, isPending: false, error });
+    }
+    if (tokenExpire) {
+      updateNotification("error", "Session Expired. Please Log In Again.");
+      return handleLogout();
     }
     const { existingCart, total } = await getCartProduct(user._id);
     if (existingCart) {

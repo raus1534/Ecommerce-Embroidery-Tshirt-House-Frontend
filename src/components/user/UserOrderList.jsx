@@ -17,8 +17,8 @@ export default function UserOrderList() {
 
   const getOrder = async () => {
     const { error, orders } = await getAllOrders(userId);
-    console.log(orders);
     if (error) return updateNotification("error", error);
+    if (!orders) return setOrders([]);
     setOrders([...orders]);
   };
   useEffect(() => {
@@ -71,21 +71,25 @@ export default function UserOrderList() {
   ];
   return (
     <div className="flex flex-col space-y-3 productList">
-     {orders.length? <DataGrid
-        rows={orders}
-        disableRowSelectionOnClick
-        columns={columns.map((column) => ({
-          ...column,
-          flex: 1,
-          renderHeader: (params) => (
-            <div className="font-semibold tracking-wide capitalize">
-              {params.field}
-            </div>
-          ),
-        }))}
-        getRowId={(row) => row._id}
-        pageSizeOptions={[5, 10, 20]}
-      />:<Empty emptyMessage="No Orders Yet"/>}
+      {orders.length ? (
+        <DataGrid
+          rows={orders}
+          disableRowSelectionOnClick
+          columns={columns.map((column) => ({
+            ...column,
+            flex: 1,
+            renderHeader: (params) => (
+              <div className="font-semibold tracking-wide capitalize">
+                {params.field}
+              </div>
+            ),
+          }))}
+          getRowId={(row) => row._id}
+          pageSizeOptions={[5, 10, 20]}
+        />
+      ) : (
+        <Empty emptyMessage="No Orders Yet" />
+      )}
     </div>
   );
 }

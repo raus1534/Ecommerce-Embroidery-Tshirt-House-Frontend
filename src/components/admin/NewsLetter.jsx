@@ -3,7 +3,6 @@ import "../admin/css/newsletter.css";
 import { DataGrid } from "@mui/x-data-grid";
 import { useNotification } from "../../hooks";
 import { getNewsLetterDetails } from "../../api/admin";
-import { Link } from "react-router-dom";
 import Empty from "../user/Empty";
 
 export default function NewsLetter() {
@@ -13,7 +12,6 @@ export default function NewsLetter() {
 
   const getNewsLetters = async () => {
     const { error, newsletters } = await getNewsLetterDetails();
-    console.log(newsletters);
     if (error) return updateNotification("error", error);
     setNewsLetters([...newsletters]);
   };
