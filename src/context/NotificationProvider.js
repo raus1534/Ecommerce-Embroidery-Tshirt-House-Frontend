@@ -1,43 +1,41 @@
-import React, { createContext, useState } from "react";
+import React, { createContext } from "react";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export const NotificationContext = createContext();
 
-let timeOutId;
 export default function NotificationProvider({ children }) {
-  const [className, setClassName] = useState("");
-  const [notification, setNotification] = useState("");
-
   const updateNotification = (type, value) => {
-    clearTimeout(timeOutId);
     switch (type) {
       case "error":
-        setClassName("bg-red-500");
+        toast.error(value);
         break;
       case "success":
-        setClassName("bg-green-500");
+        toast.success(value);
         break;
       case "warning":
-        setClassName("bg-orange-500");
+        toast.warning(value);
         break;
 
       default:
-        setClassName("bg-red-500");
+        toast.info(value);
     }
-    setNotification(value);
-    timeOutId = setTimeout(() => {
-      setNotification("");
-    }, 3000);
   };
   return (
     <NotificationContext.Provider value={{ updateNotification }}>
       {children}
-      {notification && (
-        <div className="fixed -translate-x-1/2 top-24 left-1/2">
-          <div className={className + " rounded "}>
-            <p className="px-4 py-2 font-semibold text-white">{notification}</p>
-          </div>
-        </div>
-      )}
+      <ToastContainer
+        position="bottom-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="dark"
+      />
     </NotificationContext.Provider>
   );
 }
